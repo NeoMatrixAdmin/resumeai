@@ -370,6 +370,12 @@ export default function Home() {
   };
 
   const handleGenerate = async () => {
+    if (!user) {
+      // Trigger sign in modal
+      document.querySelector<HTMLButtonElement>('[data-clerk-sign-in]')?.click();
+      setError('Please sign in to optimize your resume.');
+      return;
+    }
     if (!resumeText.trim()) { setError('Please add your resume.'); return; }
     if (!jobDescription.trim()) { setError('Please paste a job description.'); return; }
     setError('');
@@ -737,11 +743,13 @@ export default function Home() {
           </div>
         )}
 
-        <button onClick={handleGenerate} disabled={loading || usageRemaining <= 0}
+        <button onClick={handleGenerate} disabled={loading || (!user && isLoaded)}
           className="w-full flex items-center justify-center gap-3 font-mono text-sm transition-all"
-          style={{ padding: '16px 24px', borderRadius: 10, minHeight: 56, background: loading ? 'var(--surface-2)' : usageRemaining <= 0 ? 'var(--surface)' : 'var(--accent)', color: usageRemaining <= 0 ? 'var(--text-muted)' : loading ? 'var(--text-secondary)' : '#0a0a0a', border: loading ? '1px solid var(--border)' : 'none', cursor: loading || usageRemaining <= 0 ? 'not-allowed' : 'pointer', fontWeight: 500, letterSpacing: '0.02em' }}>
-          {loading ? <LoadingProgress /> : usageRemaining <= 0 ? <>Upgrade for more optimizations</> : (
-            <><Sparkles size={0} />Generate Full Optimization<ArrowRight size={16} /></>
+          style={{ padding: '16px 24px', borderRadius: 10, minHeight: 56, background: loading ? 'var(--surface-2)' : !user && isLoaded ? 'var(--surface-2)' : usageRemaining <= 0 ? 'var(--surface)' : 'var(--accent)', color: !user && isLoaded ? 'var(--text-muted)' : usageRemaining <= 0 ? 'var(--text-muted)' : loading ? 'var(--text-secondary)' : '#0a0a0a', border: loading ? '1px solid var(--border)' : 'none', cursor: loading || usageRemaining <= 0 || (!user && isLoaded) ? 'not-allowed' : 'pointer', fontWeight: 500, letterSpacing: '0.02em' }}>
+          {loading ? <LoadingProgress /> : !user && isLoaded ? (
+            <><Sparkles size={16} />Sign in to Get Started<ArrowRight size={16} /></>
+          ) : usageRemaining <= 0 ? <>Upgrade for more optimizations</> : (
+            <><Sparkles size={16} />Generate Full Optimization<ArrowRight size={16} /></>
           )}
         </button>
         {!loading && usageRemaining > 0 && (
