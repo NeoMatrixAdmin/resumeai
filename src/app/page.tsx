@@ -248,6 +248,8 @@ export default function Home() {
   const [linkedinUrl, setLinkedinUrl] = useState('');
   const [linkedinLoading, setLinkedinLoading] = useState(false);
   const [linkedinError, setLinkedinError] = useState('');
+  const [regenCount, setRegenCount] = useState(0);
+  const MAX_REGENS = 1;
   const resultsRef = useRef<HTMLDivElement>(null);
   const FREE_LIMIT = 2;
   const isDev = process.env.NODE_ENV === 'development';
@@ -384,6 +386,7 @@ export default function Home() {
     try {
       const data = await callOptimize();
       setResult(data);
+      setRegenCount(0);
       setUsageCount(data.usageCount);
       setRegenModifier('');
       setRegenCustom('');
@@ -405,12 +408,20 @@ export default function Home() {
     if (!resumeText.trim() || !jobDescription.trim()) return;
     const modifier = regenModifier === 'custom' ? regenCustom.trim() : regenModifier;
     if (!modifier) { setError('Please select a regeneration option.'); return; }
+
+    // Enforce regen limit for non-admin users
+    if (!isAdminUser && regenCount >= MAX_REGENS) {
+      setError('You have used your 1 free regeneration. Generate a new optimization to get another.');
+      return;
+    }
+
     setError('');
     setRegenLoading(true);
-    // Don't clear result — keep showing previous while loading
+
     try {
       const data = await callOptimize(modifier);
       setResult(data);
+      if (!isAdminUser) setRegenCount(prev => prev + 1);
       setLastRegenModifier(regenModifier === 'custom' ? regenCustom.trim() : REGEN_OPTIONS.find(o => o.value === regenModifier)?.label ?? modifier);
       setPrevResult(result);
       setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
@@ -707,7 +718,15 @@ export default function Home() {
           )}
           <textarea rows={10}
             placeholder={"Paste the full job description here...\n\nInclude the role requirements, responsibilities, and any listed skills or qualifications."}
-            value={jobDescription} onChange={e => setJobDescription(e.target.value)} />
+            value={jobDescription}
+            onChange={e => {
+              setJobDescription(e.target.value);
+              // Reset regen count if JD changes after an optimization
+              if (result) setRegenCount(0);
+            }}
+            readOnly={!!result && regenCount > 0 && !isAdminUser}
+            style={{ opacity: !!result && regenCount > 0 && !isAdminUser ? 0.6 : 1 }}
+          />
           {jobDescription.trim() && (() => {
             const words = jobDescription.trim().split(/\s+/).length;
             const isShort = words < 80;
@@ -1025,7 +1044,11 @@ export default function Home() {
               {regenLoading ? <LoadingProgress /> : <>↺ Regenerate with this focus</>}
             </button>
             <p className="text-center font-mono text-xs mt-3" style={{ color: 'var(--text-muted)' }}>
-              Regenerating does not use your free optimizations
+              {isAdminUser
+                ? 'Unlimited regenerations'
+                : regenCount >= MAX_REGENS
+                ? '✗ Regeneration used — generate a new optimization to reset'
+                : `${MAX_REGENS - regenCount} regeneration remaining`}
             </p>
           </div>
         </section>
