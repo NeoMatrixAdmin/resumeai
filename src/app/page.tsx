@@ -333,7 +333,7 @@ export default function Home() {
       const avgLineLength = nonBlankLines.reduce((s, l) => s + l.text.length, 0) / (nonBlankLines.length || 1);
       const hasShortLines = nonBlankLines.filter(l => l.text.length < 80).length > nonBlankLines.length * 0.4;
       const hasSections = nonBlankLines.some(l => l.text === l.text.toUpperCase() && l.text.length > 2 && l.text.length < 40);
-      const isGoodQuality = nonBlankLines.length > 8 && avgLineLength < 120 && hasShortLines && hasSections;
+      const isGoodQuality = nonBlankLines.length > 8 && avgLineLength < 150 && hasShortLines;
       const extractedText = allLines.map(l => l.text).join('\n').replace(/\n{3,}/g, '\n\n').trim();
 
       if (isGoodQuality) {
