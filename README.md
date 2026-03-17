@@ -35,27 +35,24 @@ Live at: https://tryresumeai.vercel.app
 
 ## AI fallback chain
 
-The app tries 17 AI providers in sequence, automatically falling through to the next when a provider hits its quota:
-
-1. Gemini 2.5 Flash (key 1)
-2. Gemini 2.5 Flash (key 2)
-3. Gemini Flash Latest (key 1)
-4. Gemini Flash Latest (key 2)
-5. Gemini 3 Flash Preview (key 1)
-6. Gemini 3 Flash Preview (key 2)
-7. Gemini 3.1 Flash Lite (key 1)
-8. Gemini 3.1 Flash Lite (key 2)
-9. Gemini 2.5 Flash Lite (key 1)
-10. Gemini 2.5 Flash Lite (key 2)
-11. Gemini Flash Lite Latest (key 1)
-12. Gemini Flash Lite Latest (key 2)
-13. Cerebras Qwen 235B
-14. Groq Llama 3.3 70B
-15. Groq Llama 3.1 70B
-16. Groq Mixtral 8x7B
-17. Mistral Small
-
----
+The app tries 29 AI providers in sequence, automatically falling through to the next when a provider hits its quota:
+**Updated chain structure — 29 total providers:**
+```
+Gemini 2.5 Flash      × 4 keys  =  4 providers  (best quality, thinking model)
+Gemini Flash Latest   × 4 keys  =  4 providers
+Gemini 3 Flash        × 4 keys  =  4 providers
+Gemini 3.1 Flash Lite × 4 keys  =  4 providers
+Gemini 2.5 Flash Lite × 4 keys  =  4 providers
+Gemini Flash Lite     × 4 keys  =  4 providers
+                                  ──────────────
+Total Gemini                      24 providers
+Cerebras Qwen 235B                 1 provider
+Groq Llama 3.3 70B                 1 provider
+Groq Llama 3.1 70B                 1 provider
+Groq Mixtral 8x7B                  1 provider
+Mistral Small                      1 provider
+                                  ──────────────
+Grand total                       29 providers
 
 ## Running locally
 

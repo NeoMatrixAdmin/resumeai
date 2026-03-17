@@ -288,7 +288,6 @@ function parseResult(text: string, modelName: string): OptimizeResult {
   try {
     parsed = JSON.parse(clean);
   } catch {
-    // Attempt to close truncated JSON
     const lastBrace = clean.lastIndexOf('"}');
     if (lastBrace > 0) {
       try {
@@ -334,7 +333,6 @@ function isQuotaError(message: string): boolean {
   );
 }
 
-// ── Gemini helper ─────────────────────────────────────────────
 async function tryGeminiModel(
   modelName: string,
   apiKey: string,
@@ -347,31 +345,43 @@ async function tryGeminiModel(
   const maxTokens = modelName.includes('2.5') ? 32000 : 16000;
   const model = genAI.getGenerativeModel({
     model: modelName,
-    generationConfig: { temperature: 0.15, maxOutputTokens: 16000 },
+    generationConfig: { temperature: 0.15, maxOutputTokens: maxTokens },
     systemInstruction: SYSTEM_PROMPT,
   });
   const result = await model.generateContent(buildPrompt(resume, jd, modifier));
   return parseResult(result.response.text(), label ?? modelName);
 }
 
-// ── Gemini providers — 6 models × 2 keys = 12 providers ──────
 const g1 = process.env.GEMINI_API_KEY!;
 const g2 = process.env.GEMINI_API_KEY_2!;
+const g3 = process.env.GEMINI_API_KEY_3 ?? '';
+const g4 = process.env.GEMINI_API_KEY_4 ?? '';
 
 async function tryGemini25FlashK1(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-2.5-flash', g1, r, jd, m, 'gemini-2.5-flash (key 1)'); }
 async function tryGemini25FlashK2(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-2.5-flash', g2, r, jd, m, 'gemini-2.5-flash (key 2)'); }
+async function tryGemini25FlashK3(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-2.5-flash', g3, r, jd, m, 'gemini-2.5-flash (key 3)'); }
+async function tryGemini25FlashK4(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-2.5-flash', g4, r, jd, m, 'gemini-2.5-flash (key 4)'); }
 async function tryGeminiFlashLatestK1(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-flash-latest', g1, r, jd, m, 'gemini-flash-latest (key 1)'); }
 async function tryGeminiFlashLatestK2(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-flash-latest', g2, r, jd, m, 'gemini-flash-latest (key 2)'); }
+async function tryGeminiFlashLatestK3(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-flash-latest', g3, r, jd, m, 'gemini-flash-latest (key 3)'); }
+async function tryGeminiFlashLatestK4(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-flash-latest', g4, r, jd, m, 'gemini-flash-latest (key 4)'); }
 async function tryGemini3FlashK1(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-3-flash-preview', g1, r, jd, m, 'gemini-3-flash-preview (key 1)'); }
 async function tryGemini3FlashK2(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-3-flash-preview', g2, r, jd, m, 'gemini-3-flash-preview (key 2)'); }
+async function tryGemini3FlashK3(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-3-flash-preview', g3, r, jd, m, 'gemini-3-flash-preview (key 3)'); }
+async function tryGemini3FlashK4(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-3-flash-preview', g4, r, jd, m, 'gemini-3-flash-preview (key 4)'); }
 async function tryGemini31FlashLiteK1(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-3.1-flash-lite-preview', g1, r, jd, m, 'gemini-3.1-flash-lite (key 1)'); }
 async function tryGemini31FlashLiteK2(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-3.1-flash-lite-preview', g2, r, jd, m, 'gemini-3.1-flash-lite (key 2)'); }
+async function tryGemini31FlashLiteK3(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-3.1-flash-lite-preview', g3, r, jd, m, 'gemini-3.1-flash-lite (key 3)'); }
+async function tryGemini31FlashLiteK4(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-3.1-flash-lite-preview', g4, r, jd, m, 'gemini-3.1-flash-lite (key 4)'); }
 async function tryGemini25FlashLiteK1(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-2.5-flash-lite', g1, r, jd, m, 'gemini-2.5-flash-lite (key 1)'); }
 async function tryGemini25FlashLiteK2(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-2.5-flash-lite', g2, r, jd, m, 'gemini-2.5-flash-lite (key 2)'); }
+async function tryGemini25FlashLiteK3(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-2.5-flash-lite', g3, r, jd, m, 'gemini-2.5-flash-lite (key 3)'); }
+async function tryGemini25FlashLiteK4(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-2.5-flash-lite', g4, r, jd, m, 'gemini-2.5-flash-lite (key 4)'); }
 async function tryGeminiFlashLiteLatestK1(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-flash-lite-latest', g1, r, jd, m, 'gemini-flash-lite-latest (key 1)'); }
 async function tryGeminiFlashLiteLatestK2(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-flash-lite-latest', g2, r, jd, m, 'gemini-flash-lite-latest (key 2)'); }
+async function tryGeminiFlashLiteLatestK3(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-flash-lite-latest', g3, r, jd, m, 'gemini-flash-lite-latest (key 3)'); }
+async function tryGeminiFlashLiteLatestK4(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-flash-lite-latest', g4, r, jd, m, 'gemini-flash-lite-latest (key 4)'); }
 
-// ── Non-Gemini providers ──────────────────────────────────────
 async function tryCerebras(resume: string, jd: string, modifier?: string): Promise<OptimizeResult> {
   const cerebras = new Cerebras({ apiKey: process.env.CEREBRAS_API_KEY! });
   const completion = await cerebras.chat.completions.create({
@@ -453,7 +463,6 @@ async function tryMistral(resume: string, jd: string, modifier?: string): Promis
   return parseResult(textStr, 'mistral-small');
 }
 
-// ── Main export ───────────────────────────────────────────────
 export async function optimizeResume(
   resumeText: string,
   jobDescription: string,
@@ -461,30 +470,35 @@ export async function optimizeResume(
 ): Promise<OptimizeResult> {
 
   const providers = [
-    // Gemini 2.5 Flash — best quality, thinking model
-    { name: 'Gemini 2.5 Flash (key 1)',        fn: tryGemini25FlashK1,        needsKey: !!process.env.GEMINI_API_KEY },
-    { name: 'Gemini 2.5 Flash (key 2)',        fn: tryGemini25FlashK2,        needsKey: !!process.env.GEMINI_API_KEY_2 },
-    // Gemini Flash Latest — alias for latest flash
-    { name: 'Gemini Flash Latest (key 1)',     fn: tryGeminiFlashLatestK1,    needsKey: !!process.env.GEMINI_API_KEY },
-    { name: 'Gemini Flash Latest (key 2)',     fn: tryGeminiFlashLatestK2,    needsKey: !!process.env.GEMINI_API_KEY_2 },
-    // Gemini 3 Flash Preview — separate quota
-    { name: 'Gemini 3 Flash Preview (key 1)', fn: tryGemini3FlashK1,         needsKey: !!process.env.GEMINI_API_KEY },
-    { name: 'Gemini 3 Flash Preview (key 2)', fn: tryGemini3FlashK2,         needsKey: !!process.env.GEMINI_API_KEY_2 },
-    // Gemini 3.1 Flash Lite — separate quota
-    { name: 'Gemini 3.1 Flash Lite (key 1)',  fn: tryGemini31FlashLiteK1,    needsKey: !!process.env.GEMINI_API_KEY },
-    { name: 'Gemini 3.1 Flash Lite (key 2)',  fn: tryGemini31FlashLiteK2,    needsKey: !!process.env.GEMINI_API_KEY_2 },
-    // Gemini 2.5 Flash Lite — lighter fallback
-    { name: 'Gemini 2.5 Flash Lite (key 1)',  fn: tryGemini25FlashLiteK1,    needsKey: !!process.env.GEMINI_API_KEY },
-    { name: 'Gemini 2.5 Flash Lite (key 2)',  fn: tryGemini25FlashLiteK2,    needsKey: !!process.env.GEMINI_API_KEY_2 },
-    // Gemini Flash Lite Latest — last Gemini fallback
-    { name: 'Gemini Flash Lite Latest (key 1)', fn: tryGeminiFlashLiteLatestK1, needsKey: !!process.env.GEMINI_API_KEY },
-    { name: 'Gemini Flash Lite Latest (key 2)', fn: tryGeminiFlashLiteLatestK2, needsKey: !!process.env.GEMINI_API_KEY_2 },
-    // Non-Gemini fallbacks
-    { name: 'Cerebras Qwen 235B',             fn: tryCerebras,               needsKey: !!process.env.CEREBRAS_API_KEY },
-    { name: 'Groq Llama 3.3 70B',             fn: tryGroqLlama33,            needsKey: !!process.env.GROQ_API_KEY },
-    { name: 'Groq Llama 3.1 70B',             fn: tryGroqLlama31,            needsKey: !!process.env.GROQ_API_KEY },
-    { name: 'Groq Mixtral 8x7B',              fn: tryGroqMixtral,            needsKey: !!process.env.GROQ_API_KEY },
-    { name: 'Mistral Small',                  fn: tryMistral,                needsKey: !!process.env.MISTRAL_API_KEY },
+    { name: 'Gemini 2.5 Flash (key 1)',          fn: tryGemini25FlashK1,          needsKey: !!process.env.GEMINI_API_KEY },
+    { name: 'Gemini 2.5 Flash (key 2)',          fn: tryGemini25FlashK2,          needsKey: !!process.env.GEMINI_API_KEY_2 },
+    { name: 'Gemini 2.5 Flash (key 3)',          fn: tryGemini25FlashK3,          needsKey: !!g3 },
+    { name: 'Gemini 2.5 Flash (key 4)',          fn: tryGemini25FlashK4,          needsKey: !!g4 },
+    { name: 'Gemini Flash Latest (key 1)',        fn: tryGeminiFlashLatestK1,      needsKey: !!process.env.GEMINI_API_KEY },
+    { name: 'Gemini Flash Latest (key 2)',        fn: tryGeminiFlashLatestK2,      needsKey: !!process.env.GEMINI_API_KEY_2 },
+    { name: 'Gemini Flash Latest (key 3)',        fn: tryGeminiFlashLatestK3,      needsKey: !!g3 },
+    { name: 'Gemini Flash Latest (key 4)',        fn: tryGeminiFlashLatestK4,      needsKey: !!g4 },
+    { name: 'Gemini 3 Flash Preview (key 1)',     fn: tryGemini3FlashK1,           needsKey: !!process.env.GEMINI_API_KEY },
+    { name: 'Gemini 3 Flash Preview (key 2)',     fn: tryGemini3FlashK2,           needsKey: !!process.env.GEMINI_API_KEY_2 },
+    { name: 'Gemini 3 Flash Preview (key 3)',     fn: tryGemini3FlashK3,           needsKey: !!g3 },
+    { name: 'Gemini 3 Flash Preview (key 4)',     fn: tryGemini3FlashK4,           needsKey: !!g4 },
+    { name: 'Gemini 3.1 Flash Lite (key 1)',      fn: tryGemini31FlashLiteK1,      needsKey: !!process.env.GEMINI_API_KEY },
+    { name: 'Gemini 3.1 Flash Lite (key 2)',      fn: tryGemini31FlashLiteK2,      needsKey: !!process.env.GEMINI_API_KEY_2 },
+    { name: 'Gemini 3.1 Flash Lite (key 3)',      fn: tryGemini31FlashLiteK3,      needsKey: !!g3 },
+    { name: 'Gemini 3.1 Flash Lite (key 4)',      fn: tryGemini31FlashLiteK4,      needsKey: !!g4 },
+    { name: 'Gemini 2.5 Flash Lite (key 1)',      fn: tryGemini25FlashLiteK1,      needsKey: !!process.env.GEMINI_API_KEY },
+    { name: 'Gemini 2.5 Flash Lite (key 2)',      fn: tryGemini25FlashLiteK2,      needsKey: !!process.env.GEMINI_API_KEY_2 },
+    { name: 'Gemini 2.5 Flash Lite (key 3)',      fn: tryGemini25FlashLiteK3,      needsKey: !!g3 },
+    { name: 'Gemini 2.5 Flash Lite (key 4)',      fn: tryGemini25FlashLiteK4,      needsKey: !!g4 },
+    { name: 'Gemini Flash Lite Latest (key 1)',   fn: tryGeminiFlashLiteLatestK1,  needsKey: !!process.env.GEMINI_API_KEY },
+    { name: 'Gemini Flash Lite Latest (key 2)',   fn: tryGeminiFlashLiteLatestK2,  needsKey: !!process.env.GEMINI_API_KEY_2 },
+    { name: 'Gemini Flash Lite Latest (key 3)',   fn: tryGeminiFlashLiteLatestK3,  needsKey: !!g3 },
+    { name: 'Gemini Flash Lite Latest (key 4)',   fn: tryGeminiFlashLiteLatestK4,  needsKey: !!g4 },
+    { name: 'Cerebras Qwen 235B',                 fn: tryCerebras,                 needsKey: !!process.env.CEREBRAS_API_KEY },
+    { name: 'Groq Llama 3.3 70B',                fn: tryGroqLlama33,              needsKey: !!process.env.GROQ_API_KEY },
+    { name: 'Groq Llama 3.1 70B',                fn: tryGroqLlama31,              needsKey: !!process.env.GROQ_API_KEY },
+    { name: 'Groq Mixtral 8x7B',                 fn: tryGroqMixtral,              needsKey: !!process.env.GROQ_API_KEY },
+    { name: 'Mistral Small',                      fn: tryMistral,                  needsKey: !!process.env.MISTRAL_API_KEY },
   ];
 
   let lastError: Error | null = null;
