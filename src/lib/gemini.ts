@@ -120,6 +120,9 @@ WHAT YOU CAN CHANGE:
 WHAT YOU CANNOT CHANGE:
 - The order of projects (keep original order — do NOT reorder projects based on JD relevance)
 - The skills section categories (do NOT add new skill categories that don't exist in the original)
+- CGPA and academic scores in the education section — never remove these
+- Do NOT add parenthetical clarifications to skills (e.g. "Python (Object-Oriented Programming)" is wrong — keep it as "Python")
+- Do NOT add explanatory text inside skill categories
 - Do NOT add skills the candidate has not listed (if JavaScript is not in the original skills, do not add it)
 - Which technologies appear in which project
 - Any metrics, numbers, percentages
@@ -281,7 +284,22 @@ OUTPUT — raw JSON only, zero markdown, zero explanation:
 
 function parseResult(text: string, modelName: string): OptimizeResult {
   const clean = text.replace(/```json|```/g, '').trim();
-  const parsed = JSON.parse(clean);
+  let parsed;
+  try {
+    parsed = JSON.parse(clean);
+  } catch {
+    // Attempt to close truncated JSON
+    const lastBrace = clean.lastIndexOf('"}');
+    if (lastBrace > 0) {
+      try {
+        parsed = JSON.parse(clean.slice(0, lastBrace + 2) + '}');
+      } catch {
+        throw new Error('Failed to parse AI response');
+      }
+    } else {
+      throw new Error('Failed to parse AI response');
+    }
+  }
   return {
     optimizedResume: parsed.optimizedResume ?? '',
     coverLetter: parsed.coverLetter ?? '',
@@ -326,6 +344,7 @@ async function tryGeminiModel(
   label?: string
 ): Promise<OptimizeResult> {
   const genAI = new GoogleGenerativeAI(apiKey);
+  const maxTokens = modelName.includes('2.5') ? 32000 : 16000;
   const model = genAI.getGenerativeModel({
     model: modelName,
     generationConfig: { temperature: 0.15, maxOutputTokens: 16000 },
