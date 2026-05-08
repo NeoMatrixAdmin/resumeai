@@ -714,94 +714,6 @@ export default function Home() {
           ))}
         </div>
       </section>
-      {/* Pricing */}
-      <section style={{ padding: '0 24px 80px', maxWidth: 760, margin: '0 auto' }}>
-        <div className="flex items-center gap-4 mb-10">
-          <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-          <span className="font-mono text-xs" style={{ color: 'var(--text-muted)', letterSpacing: '0.1em' }}>pricing</span>
-          <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-        </div>
-
-        {/* Dynamic PPP Badge - Shows for Tier 2 and Tier 3 countries */}
-        {pricing && pricing.tier !== 'TIER1' && (
-          <div className="flex justify-center mb-8">
-            <div 
-              className="px-4 py-2 rounded-full flex items-center gap-2"
-              style={{ background: 'var(--accent-dim)', border: '1px solid rgba(212,168,83,0.2)' }}
-            >
-              <Sparkles size={12} style={{ color: 'var(--accent)' }} />
-              <p className="font-mono text-[10px]" style={{ color: 'var(--accent)', letterSpacing: '0.05em' }}>
-                LOCALIZED PRICING ACTIVE FOR {pricing.countryName.toUpperCase()}
-              </p>
-            </div>
-          </div>
-        )}
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-          {/* Free Tier */}
-          <div style={{ padding: 28, borderRadius: 12, background: 'var(--surface)', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <div>
-              <p className="font-mono text-xs" style={{ color: 'var(--text-muted)', marginBottom: 8 }}>free</p>
-              <p className="font-display" style={{ fontSize: 36, color: 'var(--text-primary)', lineHeight: 1 }}>$0</p>
-              <p className="font-mono text-xs mt-1" style={{ color: 'var(--text-muted)' }}>forever</p>
-            </div>
-            <div style={{ height: 1, background: 'var(--border)' }} />
-            {['2 optimizations total', '1 regeneration per optimization', 'PDF + DOCX downloads', 'ATS scoring', 'Cover letter generation'].map(f => (
-              <div key={f} className="flex items-center gap-2">
-                <span style={{ color: 'var(--green)', fontSize: 12 }}>✓</span>
-                <span className="font-mono text-xs" style={{ color: 'var(--text-secondary)' }}>{f}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Pro Tier (Dynamic 3-Tier) */}
-          <div style={{ padding: 28, borderRadius: 12, background: 'var(--surface)', border: '1px solid var(--accent)', display: 'flex', flexDirection: 'column', gap: 12, position: 'relative' }}>
-            <div style={{ position: 'absolute', top: 12, right: 12, padding: '2px 10px', borderRadius: 20, background: 'var(--accent)', color: '#0a0a0a', fontSize: 10, fontFamily: 'DM Mono', fontWeight: 700 }}>
-              PRO
-            </div>
-            <div>
-              <p className="font-mono text-xs" style={{ color: 'var(--accent)', marginBottom: 8 }}>pro</p>
-              <div className="flex items-baseline gap-1">
-                <p className="font-display" style={{ fontSize: 36, color: 'var(--text-primary)', lineHeight: 1 }}>
-                  {pricing ? pricing.amountDisplay : '$9'}
-                </p>
-                <span className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>/mo</span>
-              </div>
-              <p className="font-mono text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>
-                Billed monthly in {pricing?.currency || 'USD'}
-              </p>
-            </div>
-            <div style={{ height: 1, background: 'rgba(212,168,83,0.2)' }} />
-            {[
-              'Unlimited optimizations', 
-              'Unlimited regenerations', 
-              'Priority AI (Gemini 2.5 Flash)', 
-              'Interview prep plan',
-              'Keyword gap analysis'
-            ].map(f => (
-              <div key={f} className="flex items-center gap-2">
-                <span style={{ color: 'var(--accent)', fontSize: 12 }}>✦</span>
-                <span className="font-mono text-xs" style={{ color: 'var(--text-secondary)' }}>{f}</span>
-              </div>
-            ))}
-            
-            <button
-              onClick={plan === 'pro' ? handleManageBilling : handleUpgrade}
-              disabled={checkoutLoading}
-              style={{
-                marginTop: 8, padding: '12px', borderRadius: 8,
-                background: plan === 'pro' ? 'var(--surface-2)' : 'var(--accent)',
-                color: plan === 'pro' ? 'var(--text-secondary)' : '#0a0a0a',
-                border: 'none', cursor: checkoutLoading ? 'wait' : 'pointer',
-                fontFamily: 'DM Mono', fontSize: 12, fontWeight: 500,
-                transition: 'all 0.2s'
-              }}
-            >
-              {plan === 'pro' ? 'Manage Subscription' : checkoutLoading ? 'Checking out...' : !user ? 'Sign in to upgrade' : `Upgrade Now`}
-            </button>
-          </div>
-        </div>
-      </section>
       {/* Inputs */}
       <section style={{ padding: '0 24px 80px', maxWidth: 760, margin: '0 auto' }}>
         <div style={{ marginBottom: 20 }}>
@@ -1251,7 +1163,94 @@ export default function Home() {
           </div>
         </section>
       )}
+      {/* Pricing */}
+      <section style={{ padding: '0 24px 80px', maxWidth: 760, margin: '0 auto' }}>
+        <div className="flex items-center gap-4 mb-10">
+          <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+          <span className="font-mono text-xs" style={{ color: 'var(--text-muted)', letterSpacing: '0.1em' }}>pricing</span>
+          <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+        </div>
 
+        {/* Dynamic PPP Badge - Shows for Tier 2 and Tier 3 countries */}
+        {pricing && pricing.tier !== 'TIER1' && (
+          <div className="flex justify-center mb-8">
+            <div 
+              className="px-4 py-2 rounded-full flex items-center gap-2"
+              style={{ background: 'var(--accent-dim)', border: '1px solid rgba(212,168,83,0.2)' }}
+            >
+              <Sparkles size={12} style={{ color: 'var(--accent)' }} />
+              <p className="font-mono text-[10px]" style={{ color: 'var(--accent)', letterSpacing: '0.05em' }}>
+                LOCALIZED PRICING ACTIVE FOR {pricing.countryName.toUpperCase()}
+              </p>
+            </div>
+          </div>
+        )}
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          {/* Free Tier */}
+          <div style={{ padding: 28, borderRadius: 12, background: 'var(--surface)', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div>
+              <p className="font-mono text-xs" style={{ color: 'var(--text-muted)', marginBottom: 8 }}>free</p>
+              <p className="font-display" style={{ fontSize: 36, color: 'var(--text-primary)', lineHeight: 1 }}>$0</p>
+              <p className="font-mono text-xs mt-1" style={{ color: 'var(--text-muted)' }}>forever</p>
+            </div>
+            <div style={{ height: 1, background: 'var(--border)' }} />
+            {['2 optimizations total', '1 regeneration per optimization', 'PDF + DOCX downloads', 'ATS scoring', 'Cover letter generation'].map(f => (
+              <div key={f} className="flex items-center gap-2">
+                <span style={{ color: 'var(--green)', fontSize: 12 }}>✓</span>
+                <span className="font-mono text-xs" style={{ color: 'var(--text-secondary)' }}>{f}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Pro Tier (Dynamic 3-Tier) */}
+          <div style={{ padding: 28, borderRadius: 12, background: 'var(--surface)', border: '1px solid var(--accent)', display: 'flex', flexDirection: 'column', gap: 12, position: 'relative' }}>
+            <div style={{ position: 'absolute', top: 12, right: 12, padding: '2px 10px', borderRadius: 20, background: 'var(--accent)', color: '#0a0a0a', fontSize: 10, fontFamily: 'DM Mono', fontWeight: 700 }}>
+              PRO
+            </div>
+            <div>
+              <p className="font-mono text-xs" style={{ color: 'var(--accent)', marginBottom: 8 }}>pro</p>
+              <div className="flex items-baseline gap-1">
+                <p className="font-display" style={{ fontSize: 36, color: 'var(--text-primary)', lineHeight: 1 }}>
+                  {pricing ? pricing.amountDisplay : '$9'}
+                </p>
+                <span className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>/mo</span>
+              </div>
+              <p className="font-mono text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>
+                Billed monthly in {pricing?.currency || 'USD'}
+              </p>
+            </div>
+            <div style={{ height: 1, background: 'rgba(212,168,83,0.2)' }} />
+            {[
+              'Unlimited optimizations', 
+              'Unlimited regenerations', 
+              'Priority AI (Gemini 2.5 Flash)', 
+              'Interview prep plan',
+              'Keyword gap analysis'
+            ].map(f => (
+              <div key={f} className="flex items-center gap-2">
+                <span style={{ color: 'var(--accent)', fontSize: 12 }}>✦</span>
+                <span className="font-mono text-xs" style={{ color: 'var(--text-secondary)' }}>{f}</span>
+              </div>
+            ))}
+            
+            <button
+              onClick={plan === 'pro' ? handleManageBilling : handleUpgrade}
+              disabled={checkoutLoading}
+              style={{
+                marginTop: 8, padding: '12px', borderRadius: 8,
+                background: plan === 'pro' ? 'var(--surface-2)' : 'var(--accent)',
+                color: plan === 'pro' ? 'var(--text-secondary)' : '#0a0a0a',
+                border: 'none', cursor: checkoutLoading ? 'wait' : 'pointer',
+                fontFamily: 'DM Mono', fontSize: 12, fontWeight: 500,
+                transition: 'all 0.2s'
+              }}
+            >
+              {plan === 'pro' ? 'Manage Subscription' : checkoutLoading ? 'Checking out...' : !user ? 'Sign in to upgrade' : `Upgrade Now`}
+            </button>
+          </div>
+        </div>
+      </section>
       <footer style={{ borderTop: '1px solid var(--border)', padding: '24px', textAlign: 'center' }}>
   <p className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>
     resumeai — built for job seekers
