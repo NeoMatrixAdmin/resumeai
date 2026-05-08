@@ -542,33 +542,57 @@ export default function Home() {
       setLinkedinLoading(false);
     }
   };
-  const handleDownload = async () => {
-    if (!result || downloading) return;
-    setDownloading(true);
-    try {
-      const firstLine = result.optimizedResume.split('\n')[0] ?? '';
-      const name = firstLine
-        .split(/[,•|]/)[0]
-        .replace(/\b(Bangalore|Mumbai|Delhi|Chennai|Hyderabad|Pune|India|USA|UK)\b.*/i, '')
-        .trim() || 'Candidate';
-      if (activeTab === 'resume') {
+  const handleDownload = async (format: 'pdf' | 'docx') => {
+  if (!result || downloading) return;
+  setDownloading(true);
+  try {
+    // 1. Clean up the name for the filename
+    const firstLine = result.optimizedResume.split('\n')[0] ?? '';
+    const name = firstLine
+      .split(/[,•|]/)[0]
+      .replace(/\b(Bangalore|Mumbai|Delhi|Chennai|Hyderabad|Pune|India|USA|UK)\b.*/i, '')
+      .trim() || 'Candidate';
+
+    const fileName = uploadedFileName || name;
+
+    // 2. Import all helpers from your download library
+    const { 
+      downloadResumePDF, 
+      downloadResumeDOCX, 
+      downloadCoverLetterPDF, 
+      downloadCoverLetterDOCX 
+    } = await import('@/lib/download');
+
+    // 3. Routing Logic
+    if (activeTab === 'resume') {
+      if (format === 'pdf') {
+        // Resume PDF logic
         if (!pdfIsStructured) {
           await navigator.clipboard.writeText(result.optimizedResume);
-          alert('PDF formatting unavailable for this layout. Text copied to clipboard.');
+          alert('Complex PDF formatting unavailable. Text copied to clipboard.');
           return;
         }
-        const { downloadResumePDF } = await import('@/lib/download');
-        downloadResumePDF(result.optimizedResume, uploadedFileName || name);
+        downloadResumePDF(result.optimizedResume, fileName);
       } else {
-        const { downloadCoverLetterDOCX } = await import('@/lib/download');
+        // Resume DOCX logic
+        await downloadResumeDOCX(result.optimizedResume, fileName);
+      }
+    } else {
+      if (format === 'pdf') {
+        // Cover Letter PDF logic
+        await downloadCoverLetterPDF(result.coverLetter, name);
+      } else {
+        // Cover Letter DOCX logic (Your original default)
         await downloadCoverLetterDOCX(result.coverLetter, name);
       }
-    } catch {
-      setError('Download failed. Try copying instead.');
-    } finally {
-      setDownloading(false);
     }
-  };
+  } catch (err) {
+    console.error('Download error:', err);
+    setError('Download failed. Try copying instead.');
+  } finally {
+    setDownloading(false);
+  }
+};
 
   return (
     <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
@@ -783,7 +807,7 @@ export default function Home() {
         <div style={{ marginBottom: 20 }}>
           <div className="flex items-center justify-between mb-3">
             <label className="flex items-center gap-2 text-sm font-mono" style={{ color: 'var(--text-secondary)' }}>
-              <FileText size={14} style={{ color: 'var(--accent)' }} /> your resume
+              <FileText size={14} style={{ color: 'var(--accent)' }} />  Your resume goes here
             </label>
             {!uploadedFileName && (
               <div {...getRootProps()} style={{ padding: '6px 12px', border: '1px dashed var(--border)', borderRadius: 6, cursor: 'pointer', fontSize: 12, color: isDragActive ? 'var(--accent)' : 'var(--text-muted)', borderColor: isDragActive ? 'var(--accent)' : 'var(--border)', transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -845,36 +869,8 @@ export default function Home() {
         </div>
         <div style={{ marginBottom: 24 }}>
           <label className="flex items-center gap-2 text-sm font-mono mb-3" style={{ color: 'var(--text-secondary)' }}>
-            <Briefcase size={14} style={{ color: 'var(--accent)' }} /> job description
+            <Briefcase size={14} style={{ color: 'var(--accent)' }} />  Job description goes here
           </label>
-          <div style={{ marginBottom: 12, display: 'flex', gap: 8 }}>
-            <input
-              type="text"
-              placeholder="Paste Naukri / Wellfound / internshala / Indeed job URL to auto-fill..."
-              value={linkedinUrl}
-              onChange={e => setLinkedinUrl(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleLinkedinScrape()}
-              style={{
-                flex: 1, padding: '10px 14px',
-                background: 'var(--surface)', border: '1px solid var(--border)',
-                borderRadius: 8, color: 'var(--text-primary)',
-                fontFamily: 'DM Mono', fontSize: 12, outline: 'none',
-              }}
-            />
-            <button
-              onClick={handleLinkedinScrape}
-              disabled={linkedinLoading || !linkedinUrl.trim()}
-              className="font-mono text-xs"
-              style={{
-                padding: '10px 16px', borderRadius: 8,
-                cursor: linkedinLoading || !linkedinUrl.trim() ? 'not-allowed' : 'pointer',
-                border: '1px solid var(--border)', background: 'var(--surface-2)',
-                color: linkedinLoading || !linkedinUrl.trim() ? 'var(--text-muted)' : 'var(--text-secondary)',
-                whiteSpace: 'nowrap', transition: 'all 0.2s',
-              }}>
-              {linkedinLoading ? '...' : '↓ fetch JD'}
-            </button>
-          </div>
           {linkedinError && (
             <p className="font-mono text-xs mb-2" style={{ color: 'var(--text-muted)' }}>
               ⚠ {linkedinError}
@@ -942,7 +938,7 @@ export default function Home() {
           ) : usageRemaining <= 0 && plan === 'free' && !isAdminUser ? (
             <><Sparkles size={16} />Upgrade to Continue<ArrowRight size={16} /></>
           ) : (
-            <><Sparkles size={16} />Generate Full Optimization<ArrowRight size={16} /></>
+            <><Sparkles size={0} />Generate Full Optimization<ArrowRight size={0} /></>
           )}
         </button>
         {!loading && usageRemaining > 0 && (
@@ -1153,10 +1149,38 @@ export default function Home() {
               </span>
               <div className="flex items-center gap-2">
                 <CopyButton text={activeTab === 'resume' ? result.optimizedResume : result.coverLetter} />
-                <button onClick={handleDownload} disabled={downloading}
+                
+                {/* Visual Separator */}
+                <div style={{ width: 1, height: 16, background: 'var(--border)', margin: '0 4px' }} />
+                
+                <span className="font-mono" style={{ fontSize: 9, color: 'var(--text-muted)', marginRight: 4 }}>DOWNLOAD:</span>
+                
+                <button 
+                  onClick={() => handleDownload('pdf')} 
+                  disabled={downloading}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs transition-all"
-                  style={{ background: 'var(--accent-dim)', color: 'var(--accent)', border: '1px solid rgba(212,168,83,0.3)', cursor: downloading ? 'wait' : 'pointer', opacity: downloading ? 0.7 : 1 }}>
-                  {downloading ? '...' : `↓ ${activeTab === 'resume' ? (pdfIsStructured ? 'Download PDF' : 'Copy Text') : 'Download DOCX'}`}
+                  style={{ 
+                    background: 'var(--accent-dim)', 
+                    color: 'var(--accent)', 
+                    border: '1px solid rgba(212,168,83,0.3)', 
+                    cursor: downloading ? 'wait' : 'pointer' 
+                  }}
+                >
+                  {downloading ? '...' : '↓ PDF'}
+                </button>
+
+                <button 
+                  onClick={() => handleDownload('docx')} 
+                  disabled={downloading}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs transition-all"
+                  style={{ 
+                    background: 'var(--surface-2)', 
+                    color: 'var(--text-secondary)', 
+                    border: '1px solid var(--border)', 
+                    cursor: downloading ? 'wait' : 'pointer' 
+                  }}
+                >
+                  {downloading ? '...' : '↓ DOCX'}
                 </button>
               </div>
             </div>
@@ -1229,8 +1253,13 @@ export default function Home() {
       )}
 
       <footer style={{ borderTop: '1px solid var(--border)', padding: '24px', textAlign: 'center' }}>
-        <p className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>resumeai — built for job seekers</p>
-      </footer>
+  <p className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>
+    resumeai — built for job seekers
+  </p>
+  <p className="font-mono text-[10px]" style={{ color: 'var(--text-muted)', marginTop: '8px' }}>
+    achalambiger7@gmail.com | +91 9380874099
+  </p>
+</footer>
     </div>
   );
 }

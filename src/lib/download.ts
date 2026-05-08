@@ -430,3 +430,93 @@ export async function downloadCoverLetterDOCX(
   const blob = await Packer.toBlob(doc);
   saveAs(blob, `${candidateName.replace(/\s+/g, '_')}_cover_letter.docx`);
 }   
+/**
+ * Downloads a Cover Letter as a PDF
+ */
+export async function downloadCoverLetterPDF(
+  coverLetterText: string,
+  candidateName: string = 'Candidate'
+) {
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+  const PW = doc.internal.pageSize.getWidth();
+  const ML = 54, MR = 54, MT = 60;
+  const CW = PW - ML - MR;
+  let y = MT;
+
+  // Header: Name
+  doc.setFont('times', 'bold');
+  doc.setFontSize(24);
+  doc.setTextColor(30, 58, 95); // Your NAVY color
+  doc.text(candidateName, ML, y);
+  y += 35;
+
+  // Navy Rule
+  doc.setDrawColor(30, 58, 95);
+  doc.setLineWidth(1.5);
+  doc.line(ML, y, ML + CW, y);
+  y += 40;
+
+  // Date
+  const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  doc.setFont('helvetica', 'italic');
+  doc.setFontSize(10);
+  doc.setTextColor(150, 150, 150);
+  doc.text(today, ML, y);
+  y += 40;
+
+  // Body
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(11);
+  doc.setTextColor(35, 35, 35);
+  
+  const paras = coverLetterText.split(/\n\n+/).filter(Boolean);
+  paras.forEach(para => {
+    const wrapped = doc.splitTextToSize(para, CW);
+    doc.text(wrapped, ML, y);
+    y += (wrapped.length * 15) + 20; // Line height + paragraph spacing
+  });
+
+  // Sign-off
+  y += 10;
+  doc.text('Sincerely,', ML, y);
+  y += 25;
+  doc.setFont('helvetica', 'bold');
+  doc.text(candidateName, ML, y);
+
+  doc.save(`${candidateName.replace(/\s+/g, '_')}_Cover_Letter.pdf`);
+}
+
+/**
+ * Downloads a Resume as a DOCX 
+ */
+export async function downloadResumeDOCX(
+  resumeText: string,
+  fileName: string = 'Resume'
+) {
+  const { Document, Packer, Paragraph, TextRun, AlignmentType } = await import('docx');
+  const { saveAs } = await import('file-saver');
+
+  const lines = resumeText.split('\n').filter(Boolean);
+  
+  const doc = new Document({
+    sections: [{
+      children: lines.map((line, i) => {
+        const isHeader = i === 0;
+        return new Paragraph({
+          alignment: isHeader ? AlignmentType.CENTER : AlignmentType.LEFT,
+          children: [
+            new TextRun({
+              text: line,
+              bold: isHeader || /^[A-Z\s]+$/.test(line), // Bold name or section headers
+              size: isHeader ? 32 : 22,
+            }),
+          ],
+          spacing: { before: 120, after: 120 },
+        });
+      }),
+    }],
+  });
+
+  const blob = await Packer.toBlob(doc);
+  saveAs(blob, `${fileName}_Optimized.docx`);
+}
