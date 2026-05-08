@@ -3,6 +3,7 @@ import { ClerkProvider } from '@clerk/nextjs';
 import './globals.css';
 import Script from 'next/script';
 import { Analytics } from "@vercel/analytics/next"; // <-- 1. Import Analytics
+import { SpeedInsights } from "@vercel/speed-insights/next"; // <-- 1. Import SpeedInsights
 
 export const metadata: Metadata = {
   title: 'ResumeAI — AI Resume Optimizer',
