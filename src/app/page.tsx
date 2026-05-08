@@ -959,7 +959,7 @@ export default function Home() {
 
           {result.modelUsed && (
             <p className="font-mono text-xs mb-4" style={{ color: 'var(--text-muted)', textAlign: 'right' }}>
-              generated with {result.modelUsed}
+              Generated!
             </p>
           )}
 
@@ -970,7 +970,7 @@ export default function Home() {
               border: '1px solid rgba(74,222,128,0.2)',
             }}>
               <p className="font-mono text-xs mb-3" style={{ color: 'var(--green)' }}>
-                ↺ regenerated with: {lastRegenModifier}
+                ↺ Regenerated!
               </p>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>

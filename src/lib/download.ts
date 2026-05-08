@@ -493,30 +493,188 @@ export async function downloadResumeDOCX(
   resumeText: string,
   fileName: string = 'Resume'
 ) {
-  const { Document, Packer, Paragraph, TextRun, AlignmentType } = await import('docx');
+  const { Document, Packer, Paragraph, TextRun, AlignmentType, BorderStyle, TabStopType } = await import('docx');
   const { saveAs } = await import('file-saver');
 
-  const lines = resumeText.split('\n').filter(Boolean);
-  
+  const lines = resumeText.split('\n');
+  let li = 0;
+  const paragraphs: any[] = [];
+
+  // --- Duplicate Detection Logic for DOCX Parsing ---
+  const isBullet = (s: string) => /^\s*[•\-\*]/.test(s);
+  const isContact = (s: string, idx: number): boolean => {
+    if (idx > 8) return false;
+    const t = s.trim();
+    return t.includes('@') || t.includes('+91') || t.toLowerCase().includes('linkedin') || t.toLowerCase().includes('github') || (t.includes('•') && idx < 6 && t.length < 140);
+  };
+  const isSkillsLine = (s: string): boolean => {
+    const t = s.trim();
+    const ci = t.indexOf(':');
+    if (ci === -1) return false;
+    const label = t.slice(0, ci).trim();
+    const value = t.slice(ci + 1).trim();
+    return label.split(/\s+/).length <= 3 && value.length > 3 && label.length < 35 && !isBullet(t);
+  };
+  const isSection = (s: string): boolean => {
+    const t = s.trim();
+    if (!t || t.length > 52) return false;
+    if (isBullet(t)) return false;
+    if (t.includes('@') || t.includes('+')) return false;
+    if (isSkillsLine(s)) return false;
+    if (t.includes('•') && t.length > 25) return false;
+    const words = t.split(/\s+/);
+    if (words.length > 4) return false;
+    const allCaps = t === t.toUpperCase() && /[A-Z]/.test(t) && !/^\d/.test(t);
+    const titleCase = words.length <= 3 && words.every(w => !w[0] || w[0] === w[0].toUpperCase());
+    return allCaps || titleCase;
+  };
+  const isProjectTitle = (s: string, next: string): boolean => {
+    const t = s.trim();
+    if (!t || isBullet(t)) return false;
+    if (isContact(t, 99)) return false;
+    if (isSection(t)) return false;
+    if (isSkillsLine(t)) return false;
+    if (/cgpa|gpa|relevant|coursework|b\.tech|b\.e\.|bachelor|master|icse|cbse/i.test(t)) return false;
+    if (t.includes(' | ')) return true;
+    if (t.length < 100 && isBullet(next)) return true;
+    return false;
+  };
+  const isEduLine = (s: string): boolean =>
+    /b\.tech|b\.e\.|bachelor|master|university|institute|cgpa|gpa|icse|cbse|hsc|ssc/i.test(s.trim()) ||
+    ((s.includes('–') || s.includes(' - ')) && s.trim().length < 70 && !s.trim().includes('•'));
+  const isCoursework = (s: string): boolean => /relevant\s+coursework/i.test(s.trim());
+
+  // ── 1. NAME ──
+  const nameLine = lines[li]?.trim() ?? '';
+  if (nameLine) {
+    paragraphs.push(new Paragraph({
+      alignment: AlignmentType.CENTER,
+      children: [new TextRun({ text: nameLine, font: 'Times New Roman', bold: true, size: 36, color: '0f0f0f' })], // size is half-points (36 = 18pt)
+      spacing: { after: 120 }
+    }));
+    li++;
+  }
+
+  // ── 2. CONTACT ──
+  const contactParts: string[] = [];
+  while (li < lines.length && isContact(lines[li], li)) {
+    const t = lines[li].trim();
+    if (t) contactParts.push(...t.split(/\s*•\s*/).map(p => p.trim()).filter(Boolean));
+    li++;
+  }
+  if (contactParts.length) {
+    paragraphs.push(new Paragraph({
+      alignment: AlignmentType.CENTER,
+      children: [new TextRun({ text: contactParts.join('  •  '), font: 'Arial', size: 19, color: '5a5a5a' })],
+      spacing: { after: 120 }
+    }));
+  }
+
+  // ── 3. NAVY HEADER RULE ──
+  paragraphs.push(new Paragraph({
+    border: { bottom: { color: '1e3a5f', space: 1, style: BorderStyle.SINGLE, size: 18 } },
+    spacing: { after: 240 }
+  }));
+
+  // ── 4. BODY ──
+  for (; li < lines.length; li++) {
+    const raw = lines[li];
+    const trimmed = raw.trim();
+    const next = lines[li + 1] ?? '';
+
+    if (!trimmed || isCoursework(raw)) continue;
+
+    // SECTION HEADER (Navy, Bold, Thin bottom border)
+    if (isSection(raw)) {
+      paragraphs.push(new Paragraph({
+        children: [new TextRun({ text: trimmed.toUpperCase(), font: 'Arial', bold: true, size: 22, color: '1e3a5f' })],
+        border: { bottom: { color: 'd2dae4', space: 6, style: BorderStyle.SINGLE, size: 6 } },
+        spacing: { before: 240, after: 120 }
+      }));
+      continue;
+    }
+
+    // PROJECT / JOB TITLE (Left bold, Right-aligned navy italic)
+    if (isProjectTitle(raw, next)) {
+      let title = trimmed;
+      let tech = '';
+      if (trimmed.includes(' | ')) {
+        const parts = trimmed.split(' | ');
+        title = parts[0].trim();
+        tech = parts.slice(1).join(' | ').trim();
+      } else {
+         const doubleSpace = trimmed.match(/^(.+?)\s{2,}(.+)$/);
+         if (doubleSpace) {
+           title = doubleSpace[1].trim();
+           tech  = doubleSpace[2].trim();
+         } else {
+           const techPattern = trimmed.match(/^(.*?)\s+([A-Z][a-z]+(?:\+\+|\.js|\.ts)?,.*|Python.*|Django.*|React.*|Node.*|Java\b.*)$/);
+           if (techPattern) {
+             title = techPattern[1].trim();
+             tech  = techPattern[2].trim();
+           }
+         }
+      }
+      
+      const runs = [new TextRun({ text: title, font: 'Arial', bold: true, size: 20, color: '232323' })];
+      if (tech) {
+        // The \t character works with the TabStop to push the tech string to the far right
+        runs.push(new TextRun({ text: "\t" + tech, font: 'Arial', italics: true, size: 19, color: '1e3a5f' }));
+      }
+
+      paragraphs.push(new Paragraph({
+        tabStops: [{ type: TabStopType.RIGHT, position: 10000 }], // Pushes text to the right margin
+        children: runs,
+        spacing: { before: 120, after: 60 }
+      }));
+      continue;
+    }
+
+    // BULLETS
+    if (isBullet(raw)) {
+      const content = trimmed.replace(/^[•\-\*]\s*/, '');
+      paragraphs.push(new Paragraph({
+        children: [new TextRun({ text: content, font: 'Arial', size: 19, color: '232323' })],
+        bullet: { level: 0 },
+        spacing: { before: 60, after: 60 }
+      }));
+      continue;
+    }
+
+    // SKILLS LINE
+    if (isSkillsLine(raw)) {
+      const ci = trimmed.indexOf(':');
+      const label = trimmed.slice(0, ci).trim();
+      const value = trimmed.slice(ci + 1).trim();
+      paragraphs.push(new Paragraph({
+        children: [
+          new TextRun({ text: label + ': ', font: 'Arial', bold: true, size: 20, color: '1e3a5f' }),
+          new TextRun({ text: value, font: 'Arial', size: 19, color: '232323' })
+        ],
+        spacing: { before: 80, after: 80 }
+      }));
+      continue;
+    }
+
+    // NORMAL / EDUCATION TEXT
+    const isBold = isEduLine(raw);
+    paragraphs.push(new Paragraph({
+      children: [new TextRun({ text: trimmed, font: 'Arial', bold: isBold, size: 20, color: isBold ? '232323' : '5a5a5a' })],
+      spacing: { before: 60, after: 60 }
+    }));
+  }
+
+  // Build the document
   const doc = new Document({
     sections: [{
-      children: lines.map((line, i) => {
-        const isHeader = i === 0;
-        return new Paragraph({
-          alignment: isHeader ? AlignmentType.CENTER : AlignmentType.LEFT,
-          children: [
-            new TextRun({
-              text: line,
-              bold: isHeader || /^[A-Z\s]+$/.test(line), // Bold name or section headers
-              size: isHeader ? 32 : 22,
-            }),
-          ],
-          spacing: { before: 120, after: 120 },
-        });
-      }),
+      properties: {
+        page: { margin: { top: 720, bottom: 720, left: 1080, right: 1080 } }, // Professional 0.5" top/bottom, 0.75" sides
+      },
+      children: paragraphs,
     }],
   });
 
+  const safeName = fileName.replace(/\.pdf$/i, '').replace(/[^a-zA-Z0-9_\- ]/g, '');
   const blob = await Packer.toBlob(doc);
-  saveAs(blob, `${fileName}_Optimized.docx`);
+  saveAs(blob, `${safeName}_Optimized.docx`);
 }
