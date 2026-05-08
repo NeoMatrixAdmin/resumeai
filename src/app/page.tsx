@@ -1167,7 +1167,7 @@ export default function Home() {
       <section style={{ padding: '0 24px 80px', maxWidth: 760, margin: '0 auto' }}>
         <div className="flex items-center gap-4 mb-10">
           <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-          <span className="font-mono text-xs" style={{ color: 'var(--text-muted)', letterSpacing: '0.1em' }}>pricing</span>
+          <span className="font-mono text-xs" style={{ color: 'var(--text-muted)', letterSpacing: '0.1em' }}>Pricing (Sign in to view localizied prices)</span>
           <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
         </div>
 
@@ -1178,7 +1178,7 @@ export default function Home() {
               className="px-4 py-2 rounded-full flex items-center gap-2"
               style={{ background: 'var(--accent-dim)', border: '1px solid rgba(212,168,83,0.2)' }}
             >
-              <Sparkles size={12} style={{ color: 'var(--accent)' }} />
+              <Sparkles size={0} style={{ color: 'var(--accent)' }} />
               <p className="font-mono text-[10px]" style={{ color: 'var(--accent)', letterSpacing: '0.05em' }}>
                 LOCALIZED PRICING ACTIVE FOR {pricing.countryName.toUpperCase()}
               </p>
@@ -1197,7 +1197,7 @@ export default function Home() {
             <div style={{ height: 1, background: 'var(--border)' }} />
             {['2 optimizations total', '1 regeneration per optimization', 'PDF + DOCX downloads', 'ATS scoring', 'Cover letter generation'].map(f => (
               <div key={f} className="flex items-center gap-2">
-                <span style={{ color: 'var(--green)', fontSize: 12 }}>✓</span>
+                <span style={{ color: 'var(--green)', fontSize: 12 }}> </span>
                 <span className="font-mono text-xs" style={{ color: 'var(--text-secondary)' }}>{f}</span>
               </div>
             ))}
