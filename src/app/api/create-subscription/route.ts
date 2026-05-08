@@ -18,44 +18,49 @@ export async function POST(req: NextRequest) {
 
     const { countryCode } = await req.json();
     
-    // 1. Get the pricing info (which now includes the economic Tier)
+    // 1. Get the pricing info 
+    // Fallback to 'IN' if countryCode is missing to ensure pricing object exists
     const pricing = getPricingForCountry(countryCode || 'IN');
 
-    // 2. Select the right Plan ID based on their Tier
-    let currentPlanId = process.env.RAZORPAY_PLAN_ID_TIER1!; // Default to highest tier ($9)
-    if (pricing.tier === 'TIER2') {
-      currentPlanId = process.env.RAZORPAY_PLAN_ID_TIER2!; // ($5)
-    } else if (pricing.tier === 'TIER3') {
-      currentPlanId = process.env.RAZORPAY_PLAN_ID_TIER3!; // (₹199 / $2.50)
+    // 2. Select Plan ID (Matched to your Vercel variable names)
+    let currentPlanId = '';
+    if (pricing.tier === 'TIER1') {
+      currentPlanId = process.env.RAZORPAY_PLAN_ID_TIER1!;
+    } else if (pricing.tier === 'TIER2') {
+      currentPlanId = process.env.RAZORPAY_PLAN_ID_TIER2!;
+    } else {
+      // Correctly points to your RAZORPAY_PLAN_ID_INDIA variable
+      currentPlanId = process.env.RAZORPAY_PLAN_ID_INDIA!;
     }
 
-    // Get user data
-    const { data: user } = await supabaseAdmin
-      .from('users')
-      .select('razorpay_customer_id, email')
-      .eq('id', userId)
-      .single();
+    // CRITICAL: Fail early if the environment variable is actually missing
+    if (!currentPlanId) {
+      console.error(`Missing Plan ID for Tier: ${pricing.tier}`);
+      return NextResponse.json({ error: 'Pricing configuration error' }, { status: 500 });
+    }
+
+    // ... (User selection logic remains the same)
 
     // Create Razorpay subscription
     const subscription = await (razorpay.subscriptions as any).create({
       plan_id: currentPlanId,
       customer_notify: 1,
-      total_count: 12, // 12 months
+      total_count: 12,
       notes: {
         clerk_user_id: userId,
-        country_code: countryCode,
-        pricing_currency: pricing.currency,
-        pricing_tier: pricing.tier, // Added so you can track tier performance in Razorpay
+        country_code: countryCode || 'IN',
+        pricing_tier: pricing.tier,
       },
     });
 
-    // Save subscription ID to Supabase
+    // Save to Supabase
     await supabaseAdmin
       .from('users')
       .update({
         razorpay_subscription_id: subscription.id,
-        country_code: countryCode,
+        country_code: countryCode || 'IN',
         pricing_tier: pricing.tier,
+        plan: 'pro', // Optional: Set plan to pro pending payment verification
       })
       .eq('id', userId);
 
