@@ -1,0 +1,3368 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+.gitignore
+eslint.config.mjs
+next.config.ts
+package.json
+postcss.config.mjs
+public/file.svg
+public/globe.svg
+public/next.svg
+public/vercel.svg
+public/window.svg
+README.md
+resumeai-source.zip
+src/app/api/history/route.ts
+src/app/api/optimize/route.ts
+src/app/api/scrape-jd/route.ts
+src/app/api/usage/route.ts
+src/app/favicon.ico
+src/app/globals.css
+src/app/history/page.tsx
+src/app/layout.tsx
+src/app/page.tsx
+src/app/sign-in/[[...sign-in]]/page.tsx
+src/app/sign-up/[[...sign-up]]/page.tsx
+src/components/ResultsPanel.tsx
+src/components/ResumeUploader.tsx
+src/components/UsageBadge.tsx
+src/lib/download.ts
+src/lib/gemini.ts
+src/lib/redis.ts
+src/lib/supabase-server.ts
+src/lib/supabase.ts
+src/middleware.ts
+test-all-gemini.ps1
+test-gemini.ps1
+tsconfig.json
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="eslint.config.mjs">
+import { defineConfig, globalIgnores } from "eslint/config";
+import nextVitals from "eslint-config-next/core-web-vitals";
+import nextTs from "eslint-config-next/typescript";
+
+const eslintConfig = defineConfig([
+  ...nextVitals,
+  ...nextTs,
+  // Override default ignores of eslint-config-next.
+  globalIgnores([
+    // Default ignores of eslint-config-next:
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
+  ]),
+]);
+
+export default eslintConfig;
+</file>
+
+<file path="next.config.ts">
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  /* config options here */
+};
+
+export default nextConfig;
+</file>
+
+<file path="postcss.config.mjs">
+const config = {
+  plugins: {
+    "@tailwindcss/postcss": {},
+  },
+};
+
+export default config;
+</file>
+
+<file path="public/file.svg">
+<svg fill="none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 13.5V5.41a1 1 0 0 0-.3-.7L9.8.29A1 1 0 0 0 9.08 0H1.5v13.5A2.5 2.5 0 0 0 4 16h8a2.5 2.5 0 0 0 2.5-2.5m-1.5 0v-7H8v-5H3v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1M9.5 5V2.12L12.38 5zM5.13 5h-.62v1.25h2.12V5zm-.62 3h7.12v1.25H4.5zm.62 3h-.62v1.25h7.12V11z" clip-rule="evenodd" fill="#666" fill-rule="evenodd"/></svg>
+</file>
+
+<file path="public/globe.svg">
+<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><g clip-path="url(#a)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.27 14.1a6.5 6.5 0 0 0 3.67-3.45q-1.24.21-2.7.34-.31 1.83-.97 3.1M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.48-1.52a7 7 0 0 1-.96 0H7.5a4 4 0 0 1-.84-1.32q-.38-.89-.63-2.08a40 40 0 0 0 3.92 0q-.25 1.2-.63 2.08a4 4 0 0 1-.84 1.31zm2.94-4.76q1.66-.15 2.95-.43a7 7 0 0 0 0-2.58q-1.3-.27-2.95-.43a18 18 0 0 1 0 3.44m-1.27-3.54a17 17 0 0 1 0 3.64 39 39 0 0 1-4.3 0 17 17 0 0 1 0-3.64 39 39 0 0 1 4.3 0m1.1-1.17q1.45.13 2.69.34a6.5 6.5 0 0 0-3.67-3.44q.65 1.26.98 3.1M8.48 1.5l.01.02q.41.37.84 1.31.38.89.63 2.08a40 40 0 0 0-3.92 0q.25-1.2.63-2.08a4 4 0 0 1 .85-1.32 7 7 0 0 1 .96 0m-2.75.4a6.5 6.5 0 0 0-3.67 3.44 29 29 0 0 1 2.7-.34q.31-1.83.97-3.1M4.58 6.28q-1.66.16-2.95.43a7 7 0 0 0 0 2.58q1.3.27 2.95.43a18 18 0 0 1 0-3.44m.17 4.71q-1.45-.12-2.69-.34a6.5 6.5 0 0 0 3.67 3.44q-.65-1.27-.98-3.1" fill="#666"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h16v16H0z"/></clipPath></defs></svg>
+</file>
+
+<file path="public/next.svg">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 394 80"><path fill="#000" d="M262 0h68.5v12.7h-27.2v66.6h-13.6V12.7H262V0ZM149 0v12.7H94v20.4h44.3v12.6H94v21h55v12.6H80.5V0h68.7zm34.3 0h-17.8l63.8 79.4h17.9l-32-39.7 32-39.6h-17.9l-23 28.6-23-28.6zm18.3 56.7-9-11-27.1 33.7h17.8l18.3-22.7z"/><path fill="#000" d="M81 79.3 17 0H0v79.3h13.6V17l50.2 62.3H81Zm252.6-.4c-1 0-1.8-.4-2.5-1s-1.1-1.6-1.1-2.6.3-1.8 1-2.5 1.6-1 2.6-1 1.8.3 2.5 1a3.4 3.4 0 0 1 .6 4.3 3.7 3.7 0 0 1-3 1.8zm23.2-33.5h6v23.3c0 2.1-.4 4-1.3 5.5a9.1 9.1 0 0 1-3.8 3.5c-1.6.8-3.5 1.3-5.7 1.3-2 0-3.7-.4-5.3-1s-2.8-1.8-3.7-3.2c-.9-1.3-1.4-3-1.4-5h6c.1.8.3 1.6.7 2.2s1 1.2 1.6 1.5c.7.4 1.5.5 2.4.5 1 0 1.8-.2 2.4-.6a4 4 0 0 0 1.6-1.8c.3-.8.5-1.8.5-3V45.5zm30.9 9.1a4.4 4.4 0 0 0-2-3.3 7.5 7.5 0 0 0-4.3-1.1c-1.3 0-2.4.2-3.3.5-.9.4-1.6 1-2 1.6a3.5 3.5 0 0 0-.3 4c.3.5.7.9 1.3 1.2l1.8 1 2 .5 3.2.8c1.3.3 2.5.7 3.7 1.2a13 13 0 0 1 3.2 1.8 8.1 8.1 0 0 1 3 6.5c0 2-.5 3.7-1.5 5.1a10 10 0 0 1-4.4 3.5c-1.8.8-4.1 1.2-6.8 1.2-2.6 0-4.9-.4-6.8-1.2-2-.8-3.4-2-4.5-3.5a10 10 0 0 1-1.7-5.6h6a5 5 0 0 0 3.5 4.6c1 .4 2.2.6 3.4.6 1.3 0 2.5-.2 3.5-.6 1-.4 1.8-1 2.4-1.7a4 4 0 0 0 .8-2.4c0-.9-.2-1.6-.7-2.2a11 11 0 0 0-2.1-1.4l-3.2-1-3.8-1c-2.8-.7-5-1.7-6.6-3.2a7.2 7.2 0 0 1-2.4-5.7 8 8 0 0 1 1.7-5 10 10 0 0 1 4.3-3.5c2-.8 4-1.2 6.4-1.2 2.3 0 4.4.4 6.2 1.2 1.8.8 3.2 2 4.3 3.4 1 1.4 1.5 3 1.5 5h-5.8z"/></svg>
+</file>
+
+<file path="public/vercel.svg">
+<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1155 1000"><path d="m577.3 0 577.4 1000H0z" fill="#fff"/></svg>
+</file>
+
+<file path="public/window.svg">
+<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.5 2.5h13v10a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1zM0 1h16v11.5a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 0 12.5zm3.75 4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5M7 4.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0m1.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5" fill="#666"/></svg>
+</file>
+
+<file path="src/app/api/history/route.ts">
+import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
+import { getUserOptimizations, deleteOptimization } from '@/lib/supabase-server';
+
+export async function GET(req: NextRequest) {
+  const { userId } = await auth();
+  if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const optimizations = await getUserOptimizations(userId);
+  return NextResponse.json({ optimizations });
+}
+
+export async function DELETE(req: NextRequest) {
+  const { userId } = await auth();
+  if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+  const id = req.nextUrl.searchParams.get('id');
+  if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });
+
+  const success = await deleteOptimization(id);
+  if (!success) return NextResponse.json({ error: 'Delete failed' }, { status: 500 });
+
+  return NextResponse.json({ success: true });
+}
+</file>
+
+<file path="src/app/api/optimize/route.ts">
+import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
+import { optimizeResume } from '@/lib/gemini';
+import { getUsageCount, incrementUsage, FREE_LIMIT } from '@/lib/redis';
+import { saveOptimization, supabaseAdmin } from '@/lib/supabase-server';
+
+export async function POST(req: NextRequest) {
+  try {
+    const { userId } = await auth();
+    console.log('Clerk userId:', userId);
+    const { resumeText, jobDescription, fingerprint, modifier } = await req.json();
+
+    if (!resumeText?.trim() || !jobDescription?.trim()) {
+      return NextResponse.json(
+        { error: 'Resume and job description are required.' },
+        { status: 400 }
+      );
+    }
+
+    const isAdmin = userId === process.env.ADMIN_USER_ID;
+    const identifier = userId || fingerprint;
+
+    if (!identifier) {
+      return NextResponse.json(
+        { error: 'Missing session identifier.' },
+        { status: 400 }
+      );
+    }
+
+    const usageCount = await getUsageCount(identifier);
+
+    if (!isAdmin && usageCount >= FREE_LIMIT) {
+      return NextResponse.json(
+        { error: 'FREE_LIMIT_REACHED', usageCount },
+        { status: 429 }
+      );
+    }
+
+    const result = await optimizeResume(resumeText, jobDescription, modifier);
+    const newCount = isAdmin ? usageCount : await incrementUsage(identifier);
+
+    if (userId) {
+      console.log('Attempting to save for userId:', userId);
+
+      await supabaseAdmin
+        .from('users')
+        .upsert({ id: userId, email: '' }, { onConflict: 'id' });
+
+      const jobTitleMatch =
+        jobDescription.match(/role:\s*(.+)/i) ||
+        jobDescription.match(/position:\s*(.+)/i) ||
+        jobDescription.match(/hiring\s+(?:for\s+)?(.{5,60})/i) ||
+        jobDescription.match(/(?:we are|we're)\s+(?:seeking|looking for)\s+(.{5,60})/i) ||
+        jobDescription.match(/^(?!.*(?:india|bangalore|mumbai|delhi|remote|hybrid|\d+\s*-\s*\d+\s*years?|0\s*-|1\s*-))(.{10,60})$/im);
+
+      const companyMatch =
+        jobDescription.match(/company:\s*(.+)/i) ||
+        jobDescription.match(/^([A-Z][a-zA-Z]+(?:\s[A-Z][a-zA-Z]+)?)\s+is\s+(?:an?|the)/m) ||
+        jobDescription.match(/(?:join|at)\s+([A-Z][a-zA-Z]+(?:[\s.][a-zA-Z]+)?)\b/);
+
+      const saveResult = await saveOptimization({
+        user_id: userId,
+        job_title: jobTitleMatch?.[1]?.trim().slice(0, 100) || 'Unknown Role',
+        company_name: companyMatch?.[1]?.trim().slice(0, 100) || 'Unknown Company',
+        job_description: jobDescription,
+        original_resume: resumeText,
+        optimized_resume: result.optimizedResume,
+        cover_letter: result.coverLetter,
+        ats_score_before: result.atsScoreBefore,
+        ats_score_after: result.atsScoreAfter,
+        missing_keywords: result.missingKeywords,
+        improvements: result.improvements,
+        weak_bullets: result.weakBullets,
+        score_breakdown: result.scoreBreakdown,
+        interview_prep: result.interviewPrep,
+      });
+
+      console.log('Save result:', saveResult);
+    } else {
+      console.log('No userId — not saving. userId was:', userId);
+    }
+
+    return NextResponse.json({
+      ...result,
+      usageCount: newCount,
+      usageRemaining: FREE_LIMIT - newCount,
+    });
+
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Something went wrong.';
+    console.error('Optimize error:', message);
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
+</file>
+
+<file path="src/app/api/scrape-jd/route.ts">
+import { NextRequest, NextResponse } from 'next/server';
+
+export async function POST(req: NextRequest) {
+  try {
+    const { url } = await req.json();
+
+    if (!url?.includes('wellfound.com') &&
+        !url?.includes('naukri.com') && !url?.includes('indeed.com') &&
+        !url?.includes('internshala.com')) {
+      return NextResponse.json({ error: 'Unsupported URL' }, { status: 400 });
+    }
+
+    const res = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5',
+      },
+    });
+
+    console.log('Scrape status:', res.status, 'URL:', url);
+
+    if (!res.ok) {
+      console.log('Scrape failed with status:', res.status);
+      return NextResponse.json({ error: 'Failed to fetch' }, { status: 400 });
+    }
+    if (!res.ok) {
+      return NextResponse.json({ error: 'Failed to fetch' }, { status: 400 });
+    }
+
+    const html = await res.text();
+
+    const text = html
+      .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+      .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/\s{2,}/g, '\n')
+      .trim();
+
+    const jdMatch =
+      text.match(/About the job([\s\S]{100,3000})/i) ||
+      text.match(/Job description([\s\S]{100,3000})/i) ||
+      text.match(/About this role([\s\S]{100,3000})/i) ||
+      text.match(/Responsibilities([\s\S]{100,3000})/i) ||
+      text.match(/Job Summary([\s\S]{100,3000})/i);
+
+    const extracted = jdMatch ? jdMatch[1].trim() : text.slice(0, 3000);
+
+    if (extracted.length < 100) {
+      return NextResponse.json({ error: 'Could not extract JD' }, { status: 400 });
+    }
+
+    return NextResponse.json({ text: extracted });
+
+  } catch {
+    return NextResponse.json({ error: 'Failed to fetch URL' }, { status: 500 });
+  }
+}
+</file>
+
+<file path="src/app/api/usage/route.ts">
+import { NextRequest, NextResponse } from 'next/server';
+import { getUsageCount } from '@/lib/redis';
+
+export async function GET(req: NextRequest) {
+  const fp = req.nextUrl.searchParams.get('fp');
+  if (!fp) return NextResponse.json({ count: 0 });
+  const count = await getUsageCount(fp);
+  return NextResponse.json({ count });
+}
+</file>
+
+<file path="src/app/history/page.tsx">
+'use client';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useUser } from '@clerk/nextjs';
+import { FileText, ArrowLeft, Download } from 'lucide-react';
+import Link from 'next/link';
+
+interface Optimization {
+  id: string;
+  job_title: string;
+  company_name: string;
+  ats_score_before: number;
+  ats_score_after: number;
+  optimized_resume: string;
+  cover_letter: string;
+  missing_keywords: string[];
+  improvements: string[];
+  weak_bullets: string[];
+  score_breakdown: {
+    before: { keywordMatch: number; experienceRelevance: number; skillsAlignment: number; formatting: number; };
+    after: { keywordMatch: number; experienceRelevance: number; skillsAlignment: number; formatting: number; };
+  };
+  interview_prep: {
+    topicsToStudy: string[];
+    likelyQuestions: string[];
+    skillGaps: string[];
+  };
+  model_used?: string;
+  created_at: string;
+}
+
+export default function HistoryPage() {
+  const { user, isLoaded } = useUser();
+  const [optimizations, setOptimizations] = useState<Optimization[]>([]);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoaded || !user) return;
+    fetch('/api/history')
+      .then(r => r.json())
+      .then(d => setOptimizations(d.optimizations ?? []))
+      .catch(err => console.error(err))
+      .finally(() => setLoading(false));
+  }, [user, isLoaded]);
+
+  const handleReopen = (opt: Optimization) => {
+    localStorage.setItem('rz_reopen', JSON.stringify({
+      optimizedResume: opt.optimized_resume,
+      coverLetter: opt.cover_letter,
+      atsScoreBefore: opt.ats_score_before,
+      atsScoreAfter: opt.ats_score_after,
+      missingKeywords: opt.missing_keywords ?? [],
+      improvements: opt.improvements ?? [],
+      weakBullets: opt.weak_bullets ?? [],
+      scoreBreakdown: opt.score_breakdown ?? {
+        before: { keywordMatch: 0, experienceRelevance: 0, skillsAlignment: 0, formatting: 0 },
+        after: { keywordMatch: 0, experienceRelevance: 0, skillsAlignment: 0, formatting: 0 },
+      },
+      interviewPrep: opt.interview_prep ?? { topicsToStudy: [], likelyQuestions: [], skillGaps: [] },
+      modelUsed: opt.model_used ?? '',
+      usageCount: 0,
+      usageRemaining: 2,
+    }));
+    router.push('/');
+  };
+
+  const handleDownloadResume = async (opt: Optimization) => {
+    const { downloadResumePDF } = await import('@/lib/download');
+    downloadResumePDF(opt.optimized_resume, `${opt.company_name}_resume`);
+  };
+
+  const handleDownloadCover = async (opt: Optimization) => {
+    const { downloadCoverLetterDOCX } = await import('@/lib/download');
+    const nameMatch = opt.optimized_resume.match(/^([A-Z][a-z]+(?:\s[A-Z][a-z]+)+)/m);
+    const name = nameMatch?.[1] ?? 'Candidate';
+    await downloadCoverLetterDOCX(opt.cover_letter, name);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Delete this optimization?')) return;
+    const res = await fetch(`/api/history?id=${id}`, { method: 'DELETE' });
+    if (res.ok) setOptimizations(prev => prev.filter(o => o.id !== id));
+  };
+
+  return (
+    <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
+      <nav style={{
+        borderBottom: '1px solid var(--border)', padding: '0 24px', height: '56px',
+        display: 'flex', alignItems: 'center', gap: 16,
+        background: 'rgba(10,10,10,0.9)', backdropFilter: 'blur(12px)',
+        position: 'sticky', top: 0, zIndex: 50,
+      }}>
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-muted)', textDecoration: 'none', fontSize: 13 }}>
+          <ArrowLeft size={14} /> back
+        </Link>
+        <span className="font-display" style={{ color: 'var(--accent)', fontSize: 18 }}>resumeai</span>
+      </nav>
+
+      <section style={{ maxWidth: 760, margin: '0 auto', padding: '48px 24px' }}>
+        <h1 className="font-display" style={{ fontSize: 32, color: 'var(--text-primary)', marginBottom: 8 }}>
+          Your optimizations
+        </h1>
+        <p className="font-mono text-xs" style={{ color: 'var(--text-muted)', marginBottom: 12 }}>
+          {optimizations.length} total
+        </p>
+        <p className="font-mono text-xs mb-10" style={{ color: 'var(--text-muted)' }}>
+          Click any card to reopen the full results
+        </p>
+
+        {loading && (
+          <p className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>Loading...</p>
+        )}
+
+        {!loading && optimizations.length === 0 && (
+          <div style={{ padding: 40, textAlign: 'center', border: '1px dashed var(--border)', borderRadius: 12 }}>
+            <p className="font-mono text-sm" style={{ color: 'var(--text-muted)' }}>No optimizations yet</p>
+            <Link href="/" style={{ color: 'var(--accent)', fontSize: 13, fontFamily: 'DM Mono', marginTop: 12, display: 'block' }}>
+              Create your first one →
+            </Link>
+          </div>
+        )}
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {optimizations.map(opt => (
+            <div key={opt.id}
+              onClick={() => handleReopen(opt)}
+              style={{
+                padding: 20, borderRadius: 12,
+                background: 'var(--surface)', border: '1px solid var(--border)',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16,
+                cursor: 'pointer',
+                transition: 'border-color 0.2s, background 0.2s',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.borderColor = 'rgba(212,168,83,0.4)';
+                e.currentTarget.style.background = 'var(--surface-2)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.borderColor = 'var(--border)';
+                e.currentTarget.style.background = 'var(--surface)';
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                <div style={{
+                  width: 44, height: 44, borderRadius: 8,
+                  background: 'var(--accent-dim)', border: '1px solid rgba(212,168,83,0.2)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                }}>
+                  <FileText size={18} style={{ color: 'var(--accent)' }} />
+                </div>
+                <div>
+                  <p className="font-mono text-sm" style={{ color: 'var(--text-primary)', marginBottom: 4 }}>
+                    {opt.job_title}
+                  </p>
+                  <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                    {opt.company_name} · {new Date(opt.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                  </p>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                <div style={{ textAlign: 'center' }}>
+                  <p className="font-mono" style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 2 }}>ats</p>
+                  <p className="font-mono" style={{ fontSize: 13, color: 'var(--green)' }}>
+                    {opt.ats_score_before} → {opt.ats_score_after}
+                  </p>
+                </div>
+
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button onClick={(e) => { e.stopPropagation(); handleDownloadResume(opt); }}
+                    style={{
+                      padding: '6px 12px', borderRadius: 6, border: '1px solid var(--border)',
+                      background: 'var(--surface-2)', color: 'var(--text-secondary)',
+                      fontSize: 11, fontFamily: 'DM Mono', cursor: 'pointer',
+                      display: 'flex', alignItems: 'center', gap: 4,
+                    }}>
+                    <Download size={11} /> PDF
+                  </button>
+                  <button onClick={(e) => { e.stopPropagation(); handleDownloadCover(opt); }}
+                    style={{
+                      padding: '6px 12px', borderRadius: 6, border: '1px solid var(--border)',
+                      background: 'var(--surface-2)', color: 'var(--text-secondary)',
+                      fontSize: 11, fontFamily: 'DM Mono', cursor: 'pointer',
+                      display: 'flex', alignItems: 'center', gap: 4,
+                    }}>
+                    <Download size={11} /> DOCX
+                  </button>
+                  <button onClick={async (e) => { e.stopPropagation(); await handleDelete(opt.id); }}
+                    style={{
+                      padding: '6px 12px', borderRadius: 6,
+                      border: '1px solid rgba(248,113,113,0.3)',
+                      background: 'transparent', color: 'var(--red)',
+                      fontSize: 11, fontFamily: 'DM Mono', cursor: 'pointer',
+                      display: 'flex', alignItems: 'center', gap: 4,
+                    }}>
+                    ✕ Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+</file>
+
+<file path="src/app/sign-in/[[...sign-in]]/page.tsx">
+import { SignIn } from '@clerk/nextjs';
+
+export default function SignInPage() {
+  return (
+    <div style={{
+      minHeight: '100vh',
+      background: 'var(--bg)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}>
+      <SignIn />
+    </div>
+  );
+}
+</file>
+
+<file path="src/app/sign-up/[[...sign-up]]/page.tsx">
+import { SignUp } from '@clerk/nextjs';
+
+export default function SignUpPage() {
+  return (
+    <div style={{
+      minHeight: '100vh',
+      background: 'var(--bg)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}>
+      <SignUp />
+    </div>
+  );
+}
+</file>
+
+<file path="src/components/ResultsPanel.tsx">
+
+</file>
+
+<file path="src/components/ResumeUploader.tsx">
+
+</file>
+
+<file path="src/components/UsageBadge.tsx">
+
+</file>
+
+<file path="src/lib/download.ts">
+import { jsPDF } from 'jspdf';
+
+const NAVY  = [30, 58, 95]    as const;
+const BLACK = [15, 15, 15]    as const;
+const DARK  = [35, 35, 35]    as const;
+const MID   = [90, 90, 90]    as const;
+const LIGHT = [150, 150, 150] as const;
+const RULE  = [210, 218, 228] as const;
+
+function buildResumePDF(
+  resumeText: string,
+  cfg: { fs: number; lh: number; sg: number; bg: number }
+): { doc: jsPDF; pages: number } {
+
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+  const PW = doc.internal.pageSize.getWidth();
+  const PH = doc.internal.pageSize.getHeight();
+  const ML = 54, MR = 54, MT = 46, MB = 44;
+  const CW = PW - ML - MR;
+  let y = MT;
+  const { fs, lh, sg, bg } = cfg;
+
+  const check = (n: number) => {
+    if (y + n > PH - MB) { doc.addPage(); y = MT; }
+  };
+  const setC = (rgb: readonly [number, number, number]) =>
+    doc.setTextColor(rgb[0], rgb[1], rgb[2]);
+  const setD = (rgb: readonly [number, number, number]) =>
+    doc.setDrawColor(rgb[0], rgb[1], rgb[2]);
+  const setF = (rgb: readonly [number, number, number]) =>
+    doc.setFillColor(rgb[0], rgb[1], rgb[2]);
+
+  // ── Detectors ──────────────────────────────────────────────
+
+  const isBullet = (s: string) => /^\s*[•\-\*]/.test(s);
+
+  const isContact = (s: string, idx: number): boolean => {
+    if (idx > 8) return false;
+    const t = s.trim();
+    return (
+      t.includes('@') ||
+      t.includes('+91') ||
+      t.toLowerCase().includes('linkedin') ||
+      t.toLowerCase().includes('github') ||
+      (t.includes('•') && idx < 6 && t.length < 140)
+    );
+  };
+
+  const isSkillsLine = (s: string): boolean => {
+    const t = s.trim();
+    const ci = t.indexOf(':');
+    if (ci === -1) return false;
+    const label = t.slice(0, ci).trim();
+    const value = t.slice(ci + 1).trim();
+    // Label must be short (1-3 words), value must have content
+    return (
+      label.split(/\s+/).length <= 3 &&
+      value.length > 3 &&
+      label.length < 35 &&
+      !isBullet(t)
+    );
+  };
+
+  const isSection = (s: string): boolean => {
+    const t = s.trim();
+    if (!t || t.length > 52) return false;
+    if (isBullet(t)) return false;
+    if (t.includes('@') || t.includes('+')) return false;
+    if (isSkillsLine(s)) return false;
+    if (t.includes('•') && t.length > 25) return false;
+    const words = t.split(/\s+/);
+    if (words.length > 4) return false;
+    const allCaps = t === t.toUpperCase() && /[A-Z]/.test(t) && !/^\d/.test(t);
+    const titleCase =
+      words.length <= 3 &&
+      words.every(w => !w[0] || w[0] === w[0].toUpperCase());
+    return allCaps || titleCase;
+  };
+
+  const isProjectTitle = (s: string, next: string): boolean => {
+    const t = s.trim();
+    if (!t || isBullet(t)) return false;
+    if (isContact(t, 99)) return false;
+    if (isSection(t)) return false;
+    if (isSkillsLine(t)) return false;
+    if (/cgpa|gpa|relevant|coursework|b\.tech|b\.e\.|bachelor|master|icse|cbse/i.test(t))
+      return false;
+    // Explicit pipe separator
+    if (t.includes(' | ')) return true;
+    // AI dropped the pipe — short line before a bullet = project title
+    if (t.length < 100 && isBullet(next)) return true;
+    return false;
+  };
+
+  const isEduLine = (s: string): boolean =>
+    /b\.tech|b\.e\.|bachelor|master|university|institute|cgpa|gpa|icse|cbse|hsc|ssc/i.test(
+      s.trim()
+    ) ||
+    ((s.includes('–') || s.includes(' - ')) &&
+      s.trim().length < 70 &&
+      !s.trim().includes('•'));
+
+  // Skip "Relevant Coursework" lines entirely
+  const isCoursework = (s: string): boolean =>
+    /relevant\s+coursework/i.test(s.trim());
+
+  // ── Parse ────────────────────────────────────────────────────
+  const lines = resumeText.split('\n');
+  let li = 0;
+
+  // ── NAME — use Times Bold for distinction ──────────────────
+  const nameLine = lines[li]?.trim() ?? '';
+  if (nameLine) {
+    doc.setFont('times', 'bold');
+    doc.setFontSize(fs + 16);
+    setC(BLACK);
+    const nw = doc.getTextWidth(nameLine);
+    doc.text(nameLine, (PW - nw) / 2, y);
+    y += fs + 21;
+    li++;
+  }
+
+  // ── CONTACT ────────────────────────────────────────────────
+  const contactParts: string[] = [];
+  while (li < lines.length && isContact(lines[li], li)) {
+    const t = lines[li].trim();
+    if (t) {
+      const parts = t.split(/\s*•\s*/).map(p => p.trim()).filter(Boolean);
+      contactParts.push(...parts);
+    }
+    li++;
+  }
+
+  if (contactParts.length) {
+    // Try progressively smaller font until it fits on one line
+    let contactFontSize = fs - 0.5;
+    let joined = contactParts.join('  •  ');
+    doc.setFont('helvetica', 'normal');
+
+    for (let attempt = 0; attempt < 5; attempt++) {
+      doc.setFontSize(contactFontSize);
+      const jw = doc.getTextWidth(joined);
+      if (jw <= CW + 10) break;
+      contactFontSize -= 0.4;
+    }
+
+    setC(MID);
+    const finalW = doc.getTextWidth(joined);
+    doc.text(joined, (PW - finalW) / 2, y);
+    y += lh;
+  }
+
+  // Navy header rule
+  y += 8;
+  setD(NAVY);
+  doc.setLineWidth(1.5);
+  doc.line(ML, y, ML + CW, y);
+  y += lh + 3;
+
+  // ── BODY ───────────────────────────────────────────────────
+  for (; li < lines.length; li++) {
+    const raw     = lines[li];
+    const trimmed = raw.trim();
+    const next    = lines[li + 1] ?? '';
+
+    // Skip blank lines
+    if (!trimmed) { y += bg; continue; }
+
+    // Skip "Relevant Coursework" lines entirely
+    if (isCoursework(raw)) continue;
+
+    // ── SECTION HEADER ──────────────────────────────────
+    if (isSection(raw)) {
+      check(sg + 24);
+      y += sg;
+      setF(NAVY);
+      doc.rect(ML, y - 11, 3, 14, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(fs);
+      setC(NAVY);
+      doc.text(trimmed.toUpperCase(), ML + 9, y);
+      y += 5;
+      setD(RULE);
+      doc.setLineWidth(0.4);
+      doc.line(ML + 9, y, ML + CW, y);
+      y += lh;
+      continue;
+    }
+
+    // ── PROJECT / JOB TITLE ─────────────────────────────
+    if (isProjectTitle(raw, next)) {
+      check(lh + 4);
+      y += 3;
+      let title = trimmed;
+      let tech  = '';
+      if (trimmed.includes(' | ')) {
+        const parts = trimmed.split(' | ');
+        title = parts[0].trim();
+        tech  = parts.slice(1).join(' | ').trim();
+      } else {
+        // AI dropped the | — try to split on double space first
+        const doubleSpace = trimmed.match(/^(.+?)\s{2,}(.+)$/);
+        if (doubleSpace) {
+          title = doubleSpace[1].trim();
+          tech  = doubleSpace[2].trim();
+        } else {
+          // Last resort: split where text transitions from words to
+          // a tech-looking comma-separated list
+          // e.g. "Multi-Agent AI Research System Python, LLMs, Tool Orchestration"
+          const techPattern = trimmed.match(
+            /^(.*?)\s+([A-Z][a-z]+(?:\+\+|\.js|\.ts)?,.*|Python.*|Django.*|React.*|Node.*|Java\b.*)$/
+          );
+          if (techPattern) {
+            title = techPattern[1].trim();
+            tech  = techPattern[2].trim();
+          }
+        }
+      }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(fs);
+      setC(DARK);
+      doc.text(title, ML, y);
+
+      if (tech) {
+        doc.setFont('helvetica', 'italic');
+        doc.setFontSize(fs - 1);
+        setC(NAVY);
+        const techW  = doc.getTextWidth(tech);
+        const titleW = doc.getTextWidth(title);
+        if (titleW + techW + 20 <= CW) {
+          doc.text(tech, ML + CW - techW, y);
+        } else {
+          y += lh - 2;
+          check(lh);
+          doc.text(tech, ML, y);
+        }
+      }
+      y += lh;
+      continue;
+    }
+
+    // ── BULLET ──────────────────────────────────────────
+    if (isBullet(raw)) {
+      const content = trimmed.replace(/^[•\-\*]\s*/, '');
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(fs);
+      setC(DARK);
+      const wrapped = doc.splitTextToSize(content, CW - 16);
+      check(wrapped.length * lh + 2);
+      setF(NAVY);
+      doc.circle(ML + 4, y - 3.5, 1.5, 'F');
+      for (let wi = 0; wi < wrapped.length; wi++) {
+        if (wi > 0) check(lh);
+        doc.text(wrapped[wi], ML + 13, y);
+        y += lh;
+      }
+      continue;
+    }
+
+    // ── SKILLS LINE ─────────────────────────────────────
+    if (isSkillsLine(raw)) {
+      check(lh);
+      const ci    = trimmed.indexOf(':');
+      const label = trimmed.slice(0, ci).trim();
+      const value = trimmed.slice(ci + 1).trim();
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(fs);
+      setC(NAVY);
+      doc.text(label + ':', ML, y);
+      const lw = doc.getTextWidth(label + ':  ');
+      doc.setFont('helvetica', 'normal');
+      setC(DARK);
+      const wrapped = doc.splitTextToSize(value, CW - lw);
+      doc.text(wrapped[0], ML + lw, y);
+      for (let vi = 1; vi < wrapped.length; vi++) {
+        y += lh;
+        check(lh);
+        doc.text(wrapped[vi], ML + lw, y);
+      }
+      y += lh;
+      continue;
+    }
+
+    // ── NORMAL / EDUCATION ───────────────────────────────
+    check(lh);
+    const bold = isEduLine(raw);
+    doc.setFont('helvetica', bold ? 'bold' : 'normal');
+    doc.setFontSize(fs);
+    setC(bold ? DARK : MID);
+    const wrapped = doc.splitTextToSize(trimmed, CW);
+    for (const wl of wrapped) {
+      check(lh);
+      doc.text(wl, ML, y);
+      y += lh;
+    }
+  }
+
+  // FOOTER — page numbers only on multi-page resumes
+  const total = (doc.internal as any).getNumberOfPages();
+  if (total > 1) {
+    for (let p = 1; p <= total; p++) {
+      doc.setPage(p);
+      setD(RULE);
+      doc.setLineWidth(0.4);
+      doc.line(ML, PH - 28, ML + CW, PH - 28);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.5);
+      setC(LIGHT);
+      const pt = `Page ${p} of ${total}`;
+      doc.text(pt, ML + CW - doc.getTextWidth(pt), PH - 16);
+    }
+  }
+
+  return { doc, pages: (doc.internal as any).getNumberOfPages() };
+}
+
+export function downloadResumePDF(resumeText: string, fileName: string = 'resume') {
+  const configs = [
+    { fs: 9.5,  lh: 13,   sg: 8, bg: 4 },
+    { fs: 9.2,  lh: 12.5, sg: 7, bg: 3 },
+    { fs: 8.9,  lh: 12,   sg: 6, bg: 3 },
+    { fs: 8.6,  lh: 11.5, sg: 5, bg: 2 },
+    { fs: 8.3,  lh: 11,   sg: 4, bg: 2 },
+    { fs: 8.0,  lh: 10.5, sg: 3, bg: 1 },
+  ];
+
+  let best = buildResumePDF(resumeText, configs[0]);
+  for (const cfg of configs) {
+    const attempt = buildResumePDF(resumeText, cfg);
+    best = attempt;
+    if (attempt.pages === 1) break;
+  }
+
+  const safeName = fileName
+    .replace(/\.pdf$/i, '')
+    .replace(/[^a-zA-Z0-9_\- ]/g, '');
+  best.doc.save(`${safeName}_optimized.pdf`);
+}
+
+export async function downloadCoverLetterDOCX(
+  coverLetterText: string,
+  candidateName: string = 'Candidate'
+) {
+  const { Document, Packer, Paragraph, TextRun, BorderStyle } = await import('docx');
+  const { saveAs } = await import('file-saver');
+
+  const paras = coverLetterText
+    .split(/\n\n+/)
+    .map(p => p.trim())
+    .filter(Boolean);
+
+  const today = new Date().toLocaleDateString('en-US', {
+    year: 'numeric', month: 'long', day: 'numeric',
+  });
+
+  const doc = new Document({
+    styles: {
+      default: {
+        document: {
+          run: { font: 'Calibri', size: 23, color: '1a1a1a' },
+          paragraph: { spacing: { line: 340 } },
+        },
+      },
+    },
+    sections: [{
+      properties: {
+        page: { margin: { top: 1080, bottom: 1080, left: 1134, right: 1134 } },
+      },
+      children: [
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: candidateName,
+              bold: true,
+              size: 36,
+              font: 'Calibri',
+              color: '1e3a5f',
+            }),
+          ],
+          spacing: { after: 40 },
+        }),
+        new Paragraph({
+          children: [new TextRun({ text: '' })],
+          border: {
+            bottom: { color: '1e3a5f', space: 6, style: BorderStyle.SINGLE, size: 12 },
+          },
+          spacing: { after: 320 },
+        }),
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: today,
+              size: 20,
+              font: 'Calibri',
+              color: '888888',
+              italics: true,
+            }),
+          ],
+          spacing: { after: 320 },
+        }),
+        ...paras.map((para, i) =>
+          new Paragraph({
+            children: [
+              new TextRun({ text: para, size: 23, font: 'Calibri', color: '1a1a1a' }),
+            ],
+            spacing: { after: i < paras.length - 1 ? 280 : 480, line: 360 },
+          })
+        ),
+        new Paragraph({
+          children: [
+            new TextRun({ text: 'Sincerely,', size: 23, font: 'Calibri', color: '1a1a1a' }),
+          ],
+          spacing: { after: 480 },
+        }),
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: candidateName,
+              bold: true,
+              size: 23,
+              font: 'Calibri',
+              color: '1e3a5f',
+            }),
+          ],
+        }),
+      ],
+    }],
+  });
+
+  const blob = await Packer.toBlob(doc);
+  saveAs(blob, `${candidateName.replace(/\s+/g, '_')}_cover_letter.docx`);
+}
+</file>
+
+<file path="src/lib/redis.ts">
+import { Redis } from '@upstash/redis';
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL!,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+});
+
+export const FREE_LIMIT = 2;
+
+export async function getUsageCount(fingerprint: string): Promise<number> {
+  const count = await redis.get<number>(`usage:${fingerprint}`);
+  return count ?? 0;
+}
+
+export async function incrementUsage(fingerprint: string): Promise<number> {
+  const key = `usage:${fingerprint}`;
+  const newCount = await redis.incr(key);
+  await redis.expire(key, 60 * 60 * 24 * 30);
+  return newCount;
+}
+</file>
+
+<file path="src/lib/supabase-server.ts">
+import { createClient } from '@supabase/supabase-js';
+
+// This client uses the service role key — only use in API routes, never in browser
+export const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
+
+export interface OptimizationRecord {
+  id?: string;
+  user_id: string;
+  job_title?: string;
+  company_name?: string;
+  job_description: string;
+  original_resume: string;
+  optimized_resume: string;
+  cover_letter: string;
+  ats_score_before: number;
+  ats_score_after: number;
+  missing_keywords: string[];
+  improvements: string[];
+  weak_bullets: string[];
+  score_breakdown: object;
+  interview_prep: object;
+  created_at?: string;
+}
+
+export async function saveOptimization(data: OptimizationRecord) {
+  const { data: result, error } = await supabaseAdmin
+    .from('optimizations')
+    .insert(data)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Supabase save error:', error);
+    return null;
+  }
+  return result;
+}
+
+export async function getUserOptimizations(userId: string) {
+  const { data, error } = await supabaseAdmin
+    .from('optimizations')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Supabase fetch error:', error);
+    return [];
+  }
+  return data;
+}
+
+export async function deleteOptimization(id: string) {
+  const { error } = await supabaseAdmin
+    .from('optimizations')
+    .delete()
+    .eq('id', id);
+  return !error;
+}
+</file>
+
+<file path="src/lib/supabase.ts">
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+export const supabase = createClient(supabaseUrl, supabaseKey);
+
+export interface OptimizationRecord {
+  id?: string;
+  user_id: string;
+  job_title?: string;
+  company_name?: string;
+  job_description: string;
+  original_resume: string;
+  optimized_resume: string;
+  cover_letter: string;
+  ats_score_before: number;
+  ats_score_after: number;
+  missing_keywords: string[];
+  improvements: string[];
+  weak_bullets: string[];
+  score_breakdown: object;
+  interview_prep: object;
+  created_at?: string;
+}
+
+export async function saveOptimization(data: OptimizationRecord) {
+  const { data: result, error } = await supabase
+    .from('optimizations')
+    .insert(data)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Supabase save error:', error);
+    return null;
+  }
+  return result;
+}
+
+export async function getUserOptimizations(userId: string) {
+  const { data, error } = await supabase
+    .from('optimizations')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Supabase fetch error:', error);
+    return [];
+  }
+  return data;
+}
+
+export async function deleteOptimization(id: string) {
+  const { error } = await supabase
+    .from('optimizations')
+    .delete()
+    .eq('id', id);
+
+  return !error;
+}
+</file>
+
+<file path="src/middleware.ts">
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
+
+const isPublicRoute = createRouteMatcher([
+  '/',
+  '/sign-in(.*)',
+  '/sign-up(.*)',
+  '/api/usage(.*)',
+]);
+
+export default clerkMiddleware(async (auth, request) => {
+  if (!isPublicRoute(request)) {
+    await auth.protect();
+  }
+  return NextResponse.next();
+});
+
+export const config = {
+  matcher: [
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    '/(api|trpc)(.*)',
+  ],
+};
+</file>
+
+<file path="test-all-gemini.ps1">
+$key = "AIzaSyDvY0Srd26PZuwz1r8cK8JLPC0YDczQWZg"
+$models = @(
+  "gemini-2.5-flash",
+  "gemini-2.5-flash-lite",
+  "gemini-2.0-flash",
+  "gemini-2.0-flash-lite",
+  "gemini-2.0-flash-001",
+  "gemini-2.0-flash-lite-001",
+  "gemini-flash-latest",
+  "gemini-flash-lite-latest",
+  "gemini-3-flash-preview",
+  "gemini-3-pro-preview",
+  "gemini-3.1-flash-lite-preview"
+)
+
+foreach ($model in $models) {
+  try {
+    $response = Invoke-WebRequest `
+      -Uri "https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=$key" `
+      -Method POST `
+      -Headers @{"Content-Type"="application/json"} `
+      -Body '{"contents":[{"parts":[{"text":"hi"}]}]}' `
+      -ErrorAction Stop
+    Write-Output "✓ $model — WORKS"
+  } catch {
+    $stream = $_.Exception.Response.GetResponseStream()
+    $reader = [System.IO.StreamReader]::new($stream)
+    $body = $reader.ReadToEnd()
+    if ($body -match '"code": 429') {
+      if ($body -match 'limit: 0') {
+        Write-Output "✗ $model — QUOTA ZERO (account restricted)"
+      } else {
+        Write-Output "~ $model — RATE LIMITED (works but hit limit)"
+      }
+    } elseif ($body -match '"code": 404') {
+      Write-Output "✗ $model — NOT FOUND"
+    } else {
+      Write-Output "✗ $model — ERROR: $($_.Exception.Response.StatusCode)"
+    }
+  }
+  Start-Sleep -Milliseconds 500
+}
+</file>
+
+<file path="test-gemini.ps1">
+try {
+  $response = Invoke-WebRequest `
+    -Uri "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyDvY0Srd26PZuwz1r8cK8JLPC0YDczQWZg" `
+    -Method POST `
+    -Headers @{"Content-Type"="application/json"} `
+    -Body '{"contents":[{"parts":[{"text":"say hello"}]}]}' 
+Write-Output $response.Content
+} catch {
+  Write-Output "Status: $($_.Exception.Response.StatusCode)"
+  $stream = $_.Exception.Response.GetResponseStream()
+  $reader = [System.IO.StreamReader]::new($stream)
+  Write-Output "Body: $($reader.ReadToEnd())"
+}
+</file>
+
+<file path="tsconfig.json">
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts"
+  ],
+  "exclude": ["node_modules"]
+}
+</file>
+
+<file path=".gitignore">
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+.env.local
+.env
+.env*.local
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+</file>
+
+<file path="package.json">
+{
+  "name": "resumeai",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@cerebras/cerebras_cloud_sdk": "^1.64.1",
+    "@clerk/nextjs": "^7.0.4",
+    "@google/generative-ai": "^0.24.1",
+    "@mistralai/mistralai": "^1.15.1",
+    "@supabase/supabase-js": "^2.99.1",
+    "@upstash/redis": "^1.37.0",
+    "docx": "^9.6.1",
+    "file-saver": "^2.0.5",
+    "groq-sdk": "^1.1.1",
+    "jspdf": "^4.2.0",
+    "lucide-react": "^0.577.0",
+    "next": "16.1.6",
+    "openai": "^6.29.0",
+    "pdfjs-dist": "^5.5.207",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-dropzone": "^15.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/file-saver": "^2.0.7",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
+</file>
+
+<file path="src/app/globals.css">
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0a0a0a;
+  --surface: #111111;
+  --surface-2: #1a1a1a;
+  --border: #2a2a2a;
+  --border-hover: #3a3a3a;
+  --text-primary: #f0ede8;
+  --text-secondary: #a0a09a;
+  --text-muted: #7a7670;
+  --accent: #d4a853;
+  --accent-dim: #2a2010;
+  --green: #4ade80;
+  --green-dim: #0f2018;
+  --red: #f87171;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  background: var(--bg);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Grain overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0.4;
+}
+
+.font-display {
+  font-family: 'DM Serif Display', serif;
+}
+
+.font-mono {
+  font-family: 'DM Mono', monospace;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* Textarea base */
+textarea {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  resize: none;
+  outline: none;
+  background: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  width: 100%;
+  transition: border-color 0.2s;
+  line-height: 1.7;
+}
+
+textarea:focus {
+  border-color: var(--border-hover);
+}
+
+textarea::placeholder {
+  color: var(--text-muted);
+}
+/* Make secondary labels more readable */
+.label-secondary {
+  color: #9a9690;
+}
+/* Fade-in animation */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up {
+  animation: fadeUp 0.5s ease forwards;
+}
+
+.fade-up-1 { animation-delay: 0.05s; opacity: 0; }
+.fade-up-2 { animation-delay: 0.15s; opacity: 0; }
+.fade-up-3 { animation-delay: 0.25s; opacity: 0; }
+.fade-up-4 { animation-delay: 0.35s; opacity: 0; }
+.fade-up-5 { animation-delay: 0.45s; opacity: 0; }
+
+/* Pulse loader */
+@keyframes pulse-dot {
+  0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+  40% { opacity: 1; transform: scale(1); }
+}
+
+.pulse-dot {
+  animation: pulse-dot 1.4s ease-in-out infinite;
+}
+.pulse-dot:nth-child(2) { animation-delay: 0.2s; }
+.pulse-dot:nth-child(3) { animation-delay: 0.4s; }
+</file>
+
+<file path="src/app/layout.tsx">
+import type { Metadata } from 'next';
+import { ClerkProvider } from '@clerk/nextjs';
+import './globals.css';
+
+export const metadata: Metadata = {
+  title: 'ResumeAI — AI Resume Optimizer',
+  description: 'Optimize your resume for any job description in seconds',
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <ClerkProvider>
+      <html lang="en">
+        <body>{children}</body>
+      </html>
+    </ClerkProvider>
+  );
+}
+</file>
+
+<file path="README.md">
+# ResumeAI
+
+An AI-powered resume optimizer that rewrites your resume bullets for specific job descriptions, scores your ATS match, generates a cover letter, and prepares you for interviews.
+
+Live at: https://tryresumeai.vercel.app
+
+---
+
+## What it does
+
+- Rewrites resume bullets using exact terminology from the job description
+- Scores ATS match before and after optimization (0-100)
+- Generates a tailored cover letter in first person
+- Identifies missing keywords, weak bullets, and skill gaps
+- Provides likely interview questions based on your resume and the JD
+- Downloads optimized resume as PDF and cover letter as DOCX
+- Saves all past optimizations to your account with full history
+- Regenerates with different focus modes (max ATS, senior tone, shorter bullets, custom instruction)
+
+---
+
+## Tech stack
+
+- **Frontend**: Next.js 14, TypeScript, Tailwind CSS
+- **Auth**: Clerk (Google + GitHub OAuth)
+- **Database**: Supabase (PostgreSQL)
+- **Rate limiting**: Upstash Redis
+- **AI**: Multi-provider fallback chain — Gemini 2.5 Flash, Cerebras Qwen 235B, Groq Llama 3.3 70B, Mistral Small
+- **PDF parsing**: pdfjs-dist with position-aware coordinate extraction
+- **PDF generation**: jsPDF
+- **DOCX generation**: docx + file-saver
+- **Deployment**: Vercel
+
+---
+
+## AI fallback chain
+
+The app tries 29 AI providers in sequence, automatically falling through to the next when a provider hits its quota:
+**Updated chain structure — 29 total providers:**
+```
+Gemini 2.5 Flash      × 4 keys  =  4 providers  (best quality, thinking model)
+Gemini Flash Latest   × 4 keys  =  4 providers
+Gemini 3 Flash        × 4 keys  =  4 providers
+Gemini 3.1 Flash Lite × 4 keys  =  4 providers
+Gemini 2.5 Flash Lite × 4 keys  =  4 providers
+Gemini Flash Lite     × 4 keys  =  4 providers
+                                  ──────────────
+Total Gemini                      24 providers
+Cerebras Qwen 235B                 1 provider
+Groq Llama 3.3 70B                 1 provider
+Groq Llama 3.1 70B                 1 provider
+Groq Mixtral 8x7B                  1 provider
+Mistral Small                      1 provider
+                                  ──────────────
+Grand total                       29 providers
+
+## Running locally
+
+### Prerequisites
+
+- Node.js 18+
+- A Clerk account (free)
+- A Supabase project (free)
+- An Upstash Redis database (free)
+- At least one AI API key (Gemini, Groq, or Cerebras — all free)
+
+### Setup
+
+1. Clone the repo
+```bash
+git clone https://github.com/NeoMatrixAdmin/resumeai.git
+cd resumeai
+```
+
+2. Install dependencies
+```bash
+npm install
+```
+
+3. Create `.env.local` in the root directory
+```env
+# Gemini (get free keys at aistudio.google.com)
+GEMINI_API_KEY=
+GEMINI_API_KEY_2=
+
+# Groq (get free key at console.groq.com)
+GROQ_API_KEY=
+
+# Cerebras (get free key at cloud.cerebras.ai)
+CEREBRAS_API_KEY=
+
+# Mistral (get free key at console.mistral.ai)
+MISTRAL_API_KEY=
+
+# Clerk (get keys at clerk.com)
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
+
+# Supabase (get keys at supabase.com)
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+
+# Upstash Redis (get keys at upstash.com)
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
+
+# Admin bypass (your Clerk user ID for unlimited access)
+ADMIN_USER_ID=
+NEXT_PUBLIC_ADMIN_USER_ID=
+```
+
+4. Set up Supabase database
+
+Run this in your Supabase SQL editor:
+```sql
+create table public.users (
+  id text primary key,
+  email text,
+  created_at timestamptz default now()
+);
+
+create table public.optimizations (
+  id uuid default gen_random_uuid() primary key,
+  user_id text references public.users(id) on delete cascade,
+  job_title text,
+  company_name text,
+  job_description text,
+  original_resume text,
+  optimized_resume text,
+  cover_letter text,
+  ats_score_before int,
+  ats_score_after int,
+  missing_keywords text[],
+  improvements text[],
+  weak_bullets text[],
+  score_breakdown jsonb,
+  interview_prep jsonb,
+  created_at timestamptz default now()
+);
+
+alter table public.users disable row level security;
+alter table public.optimizations disable row level security;
+```
+
+5. Run the dev server
+```bash
+npm run dev
+```
+
+Open http://localhost:3000
+
+---
+
+## Project structure
+```
+src/
+├── app/
+│   ├── api/
+│   │   ├── optimize/route.ts       # Main AI optimization endpoint
+│   │   ├── usage/route.ts          # Usage tracking
+│   │   ├── history/route.ts        # GET + DELETE history
+│   │   └── scrape-jd/route.ts      # Job description URL scraper
+│   ├── history/page.tsx            # Optimization history page
+│   ├── sign-in/[[...sign-in]]/     # Clerk sign in
+│   ├── sign-up/[[...sign-up]]/     # Clerk sign up
+│   ├── globals.css
+│   ├── layout.tsx
+│   └── page.tsx                    # Main app page
+├── lib/
+│   ├── gemini.ts                   # AI provider fallback chain
+│   ├── redis.ts                    # Usage tracking with Upstash
+│   ├── supabase.ts                 # Client-side Supabase
+│   ├── supabase-server.ts          # Server-side Supabase admin client
+│   └── download.ts                 # PDF + DOCX generation
+└── proxy.ts                        # Clerk middleware
+```
+
+---
+
+## Features in detail
+
+### ATS scoring
+
+The AI performs mechanical keyword counting against the top 15 JD keywords, top 5 required qualifications, and required technical skills. Scores are weighted: keyword match (40%), experience relevance (30%), skills alignment (20%), formatting (10%). Realistic improvement range is 10-20 points.
+
+### Regeneration
+
+After an initial optimization, users can regenerate with a different focus without using a free optimization. Available modes: Max ATS aggressive, Preserve my style, Shorter bullets, Senior/confident tone, Entry level tone, Add more metrics, Custom instruction. Free users get 1 regeneration per optimization.
+
+### PDF parsing
+
+Uses pdfjs-dist with coordinate-based extraction to reconstruct resume structure from raw PDF bytes. Groups text items by Y coordinate to detect lines, measures line spacing to detect section breaks, and validates output quality before accepting. Falls back to plain text if structure detection fails.
+
+### Multi-provider AI
+
+All providers share the same system prompt and user prompt. The prompt instructs the AI to build a locked technology map per project before rewriting — preventing fabrication of technologies. Regeneration injects a modifier block at the highest priority position in the prompt, overriding default behavior.
+
+---
+
+## Deployment
+
+The app is deployed on Vercel. To deploy your own instance:
+
+1. Push to GitHub
+2. Import the repo on vercel.com
+3. Add all environment variables from `.env.local`
+4. Deploy
+
+Vercel automatically sets `NODE_ENV=production` which enables real usage enforcement.
+
+---
+
+## License
+
+MIT
+</file>
+
+<file path="src/lib/gemini.ts">
+import Groq from 'groq-sdk';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import { Mistral } from '@mistralai/mistralai';
+import Cerebras from '@cerebras/cerebras_cloud_sdk';
+
+export interface OptimizeResult {
+  optimizedResume: string;
+  coverLetter: string;
+  atsScoreBefore: number;
+  atsScoreAfter: number;
+  missingKeywords: string[];
+  improvements: string[];
+  weakBullets: string[];
+  interviewPrep: {
+    topicsToStudy: string[];
+    likelyQuestions: string[];
+    skillGaps: string[];
+  };
+  scoreBreakdown: {
+    before: { keywordMatch: number; experienceRelevance: number; skillsAlignment: number; formatting: number; };
+    after: { keywordMatch: number; experienceRelevance: number; skillsAlignment: number; formatting: number; };
+  };
+  modelUsed?: string;
+}
+
+const SYSTEM_PROMPT = `You are the world's most aggressive and precise resume optimizer. You have two absolute rules:
+
+RULE 1 — NEVER FABRICATE:
+- Never add a technology to a project not explicitly listed for that project in the original
+- Never add a metric, number, or percentage not in the original resume
+- Never move a technology from one project to another
+- Never infer that a project "probably used" something
+- If it is not written in the original, it does not exist
+
+RULE 2 — MAXIMIZE ATS SCORE LEGITIMATELY:
+- Reframe every bullet using exact JD terminology
+- Mine every JD keyword and weave it into bullets where truthful
+- Make every word earn its place
+- A rewrite that doesn't add JD keywords has failed
+
+You always respond with valid raw JSON only — no markdown, no code fences, no explanation.`;
+
+function buildPrompt(resumeText: string, jobDescription: string, modifier?: string): string {
+  const modifierBlock = modifier ? `
+═══════════════════════════════════════════════════════════
+⚠ REGENERATION INSTRUCTION — HIGHEST PRIORITY ⚠
+This is a regeneration request. The user has given a specific instruction that OVERRIDES your default approach.
+You MUST follow this instruction above everything else in this prompt:
+
+"${modifier}"
+
+Every decision you make — how aggressively you rewrite, what tone you use, how long bullets are, what to prioritize — must be filtered through this instruction first. If the instruction conflicts with any other rule in this prompt, the instruction wins.
+═══════════════════════════════════════════════════════════
+` : '';
+
+  return `${modifierBlock}Optimize this resume for the target job. Follow the phases exactly.
+
+ORIGINAL RESUME:
+${resumeText}
+
+JOB DESCRIPTION:
+${jobDescription}
+
+═══════════════════════════════════════════════════════════
+BEFORE YOU WRITE ANYTHING — BUILD THIS MAP:
+═══════════════════════════════════════════════════════════
+
+Read the resume. For each project list ONLY technologies explicitly mentioned for that project in the original. This is your locked reference — you cannot add to it.
+
+Project 1: [name] → technologies: [only what's in original for this project]
+Project 2: [name] → technologies: [only what's in original for this project]
+Project 3: [name] → technologies: [only what's in original for this project]
+Project 4: [name] → technologies: [only what's in original for this project]
+
+You will ONLY mention a technology in a project's bullets if it appears in that project's locked list.
+
+═══════════════════════════════════════════════════════════
+STEP 1 — SCORE THE ORIGINAL (mechanical counting, not estimation)
+═══════════════════════════════════════════════════════════
+
+Extract the top 15 keywords/technologies/phrases from the JD.
+Count exactly how many appear in the original resume.
+keywordMatch = round((count/15) × 100)
+
+List the top 5 required qualifications from the JD.
+Count how many the resume directly addresses.
+experienceRelevance = round((count/5) × 100)
+
+List all required + preferred technical skills from JD.
+Count how many appear anywhere in the resume's skills section.
+skillsAlignment = round((matches/total) × 100)
+
+formatting: 85 = clean consistent sections. 75 = acceptable. 60 = messy.
+atsScoreBefore = round((keywordMatch×0.4) + (experienceRelevance×0.3) + (skillsAlignment×0.2) + (formatting×0.1))
+
+SCORING HONESTY RULE:
+If the JD lists specific required technologies (Node.js, React, specific frameworks) that do NOT appear anywhere in the resume, the experienceRelevance score must reflect this gap. A resume missing 3+ required technologies cannot score above 70 on experienceRelevance. Be honest — an inflated score helps nobody.
+
+═══════════════════════════════════════════════════════════
+STEP 2 — JD KEYWORD CHECKLIST
+═══════════════════════════════════════════════════════════
+
+Before rewriting, build a checklist of every important keyword from the JD.
+For each keyword ask: can this be truthfully added to any bullet in the resume?
+If yes — it MUST be added. No exceptions.
+This is how you maximize ATS score without fabricating.
+
+═══════════════════════════════════════════════════════════
+STEP 3 — AGGRESSIVE REWRITE
+═══════════════════════════════════════════════════════════
+
+WHAT YOU CAN CHANGE:
+- Every word used to describe existing work
+- Action verbs (make them stronger)
+- Framing and emphasis
+- Order of bullets within sections (most JD-relevant first)
+- Order within existing skill categories (reorder items within a category, never add new items or new categories)
+- The summary entirely
+
+WHAT YOU CANNOT CHANGE:
+- The order of projects (keep original order — do NOT reorder projects based on JD relevance)
+- The skills section categories (do NOT add new skill categories that don't exist in the original)
+- CGPA and academic scores in the education section — never remove these
+- Do NOT add parenthetical clarifications to skills (e.g. "Python (Object-Oriented Programming)" is wrong — keep it as "Python")
+- Do NOT add explanatory text inside skill categories
+- Do NOT add skills the candidate has not listed (if JavaScript is not in the original skills, do not add it)
+- Which technologies appear in which project
+- Any metrics, numbers, percentages
+- Project names, company names, job titles, dates
+- Education section
+- Candidate name and contact info
+
+BULLET TRANSFORMATION — apply this to EVERY bullet:
+1. DECODE: Strip all fluff. What is the raw technical work done here?
+2. MATCH: Which JD keyword from your checklist best describes this work?
+3. REFRAME: Rewrite using the JD's exact terminology for the same work
+4. STRENGTHEN: Strong action verb + technical approach + outcome/scope
+5. CHECK: JD keyword present? Strong verb? Outcome? No to any = rewrite again
+6. VERIFY: Is every technology mentioned in this bullet in that project's locked list? No = remove it
+
+DEDUPLICATION — mandatory before finalizing:
+Read every bullet you wrote. If two bullets in the same project describe the same core action — keep the stronger one, delete the other. Every bullet must describe a DIFFERENT piece of work.
+
+CONCRETE EXAMPLES — surface vs deep:
+
+Original: "Implemented LLM task decomposition, iterative reasoning workflows, and automated structured report generation"
+JD requires: "pipeline orchestration", "asynchronous processing"
+BAD: "Implemented LLM task decomposition...using Tool Orchestration"
+GOOD: "Orchestrated asynchronous LLM task decomposition and iterative reasoning pipelines to automate end-to-end structured report generation across a 5-agent workflow"
+
+Original: "Designed relational database schemas and optimized queries for scalable user interactions"
+JD requires: "PostgreSQL", "query optimization", "database performance"
+BAD: "Designed relational database schemas and optimized queries using SQL"
+GOOD: "Architected PostgreSQL schemas and optimized query execution plans to support scalable user interactions across authentication, feed generation, and profile management features"
+
+Original: "Built a full-stack web platform with secure authentication using Google OAuth 2.0 and JWT"
+JD requires: "JWT authentication", "OAuth", "secure APIs"
+BAD: "Built a full-stack web platform with secure authentication using Django and PostgreSQL"
+GOOD: "Engineered a full-stack web platform with JWT and Google OAuth 2.0 authentication, implementing secure token validation and session management for the REST API layer"
+
+BANNED PHRASES:
+"utilizing" → always "using"
+"leveraging" → always "using"
+"ensuring [vague outcome]" → cut the ending
+"enhancing user experience" → cut entirely
+"enhancing system usability" → cut entirely
+"with a focus on" → rewrite the sentence
+"strong foundation in" → cut
+"best practices" → name the specific practice
+"seamless", "robust", "dynamic" → cut
+"demonstrated my ability to" → cut
+"I used X to achieve this" → rewrite
+
+═══════════════════════════════════════════════════════════
+STEP 4 — SUMMARY (2 sentences, hard limit, no exceptions)
+═══════════════════════════════════════════════════════════
+
+S1: [Exact job title from JD] (Class of [graduation year from resume]) with experience in [top 2 technical domains from JD that candidate actually has based on their skills section].
+S2: Built [specific project type matching JD domain] using [top 3 JD-required technologies that appear in resume skills section], [one real achievement — the ~90% reduction if relevant, otherwise a qualitative scope].
+
+HARD RULES:
+- "Class of 2026" in parentheses — never mid-sentence
+- Never "with a focus on", "keen interest", "strong foundation", "passionate about"
+- Every word must be a verifiable fact from the resume
+- If the sentence could describe any developer, rewrite it
+
+═══════════════════════════════════════════════════════════
+STEP 5 — SCORE THE OPTIMIZED RESUME
+═══════════════════════════════════════════════════════════
+
+Repeat the exact same mechanical counting from Step 1 on your NEW resume.
+Count the JD keywords now present. Be honest.
+Realistic improvement from deep rewriting: 10-20 points.
+Less than 8 = rewrite was not deep enough, go back.
+More than 25 = you inflated the after score, correct it.
+
+═══════════════════════════════════════════════════════════
+STEP 6 — COVER LETTER (write this exceptionally — this is what gets interviews)
+═══════════════════════════════════════════════════════════
+
+NAME EXTRACTION — critical:
+The name is the very first line of the resume. It is 2-3 words only.
+It ends before any newline, comma, city, phone, or email.
+"Achal Ambiger\nBangalore..." → name is "Achal Ambiger" only.
+Never include a city or country in the name.
+
+WRITE ENTIRELY IN FIRST PERSON:
+Every sentence uses "I", "My", or starts with a project name.
+NEVER write "[Name] is applying" or "[Name] has experience" — always first person.
+A cover letter written in third person is an automatic failure.
+
+4 tight paragraphs — write like a confident senior engineer, not an eager student:
+
+P1 (2 sentences — make them count):
+- "I am applying for the [exact role name] at [exact company name]."
+- One sharp, specific observation about this company that shows you read the JD carefully. Their specific tech stack, product scale, engineering challenge, or domain. NOT "I admire your mission" or "I am drawn to your innovative culture."
+
+P2 (2-3 sentences — your strongest argument):
+- Open with your single most relevant technical credential for their biggest stated need
+- Be concrete — name the technology, describe what it did
+- If the ~90% metric is relevant to this role, use it here. If not, use qualitative scope.
+
+P3 (2-3 sentences — show your work):
+- Name your single most relevant project for this specific JD
+- What you built + the key technical decision that made it work + the real outcome
+- Name the actual technologies. Be specific. This is what they'll ask about in the interview.
+
+P4 (2 sentences — close confidently):
+- "I would welcome the opportunity to discuss how my experience with [2-3 specific technologies relevant to this JD] maps to [specific stated need from JD]."
+- "I am available for an interview at your convenience."
+
+ABSOLUTE BAN LIST — if any of these appear, the cover letter has failed:
+"I am excited to" → rewrite
+"I am passionate about" → rewrite
+"I would be a great fit" → delete
+"I believe" → delete
+"I am a fast learner" → delete
+"I look forward to hearing from you" → delete
+"my skills and experience align" → delete
+"I am confident that" → delete
+"make a positive impact" → delete
+"utilizing" → use "using"
+"leveraging" → use "using"
+Any sentence written in third person → rewrite in first person
+"demonstrated my ability to" → rewrite
+"looking forward to discussing" → use "I would welcome discussing"
+"I used X to achieve Y" → rewrite as "X enabled Y" or name the outcome directly
+
+═══════════════════════════════════════════════════════════
+STEP 7 — FEEDBACK
+═══════════════════════════════════════════════════════════
+
+improvements: For each major change — WHAT bullet changed → HOW it changed → WHY that specific change helps with this JD.
+weakBullets: After your best effort, which bullets are still weak? Name the exact bullet, explain why, what real experience would fix it.
+missingKeywords: JD keywords genuinely absent from the ENTIRE resume including the skills section. If a technology appears ANYWHERE in the resume it is NOT missing.
+
+interviewPrep:
+topicsToStudy: Specific technical gaps. Specific enough to Google tonight.
+likelyQuestions: Real questions this specific interviewer asks this specific candidate for this role.
+skillGaps: What this JD requires that the resume does not show. Direct. No softening.
+
+═══════════════════════════════════════════════════════════
+OUTPUT — raw JSON only, zero markdown, zero explanation:
+═══════════════════════════════════════════════════════════
+{
+  "optimizedResume": "Full rewritten resume. Same structure, same sections, same order, same casing as original. Only bullets and summary changed. Use \\n for newlines.",
+  "coverLetter": "4 paragraphs. \\n\\n between paragraphs. First person throughout. Name from first line of resume only. No banned phrases.",
+  "atsScoreBefore": 0,
+  "atsScoreAfter": 0,
+  "scoreBreakdown": {
+    "before": { "keywordMatch": 0, "experienceRelevance": 0, "skillsAlignment": 0, "formatting": 0 },
+    "after": { "keywordMatch": 0, "experienceRelevance": 0, "skillsAlignment": 0, "formatting": 0 }
+  },
+  "missingKeywords": ["actual JD keyword genuinely absent from entire resume"],
+  "improvements": ["Exact bullet → what changed → why it helps this specific JD"],
+  "weakBullets": ["Exact bullet → why still weak → what real experience would fix it"],
+  "interviewPrep": {
+    "topicsToStudy": ["Specific technical topic + specific enough to Google tonight"],
+    "likelyQuestions": ["Real question this interviewer asks this specific candidate"],
+    "skillGaps": ["Specific: what JD requires → what resume shows instead"]
+  }
+}`;
+}
+
+function parseResult(text: string, modelName: string): OptimizeResult {
+  const clean = text.replace(/```json|```/g, '').trim();
+  let parsed;
+  try {
+    parsed = JSON.parse(clean);
+  } catch {
+    const lastBrace = clean.lastIndexOf('"}');
+    if (lastBrace > 0) {
+      try {
+        parsed = JSON.parse(clean.slice(0, lastBrace + 2) + '}');
+      } catch {
+        throw new Error('Failed to parse AI response');
+      }
+    } else {
+      throw new Error('Failed to parse AI response');
+    }
+  }
+  return {
+    optimizedResume: parsed.optimizedResume ?? '',
+    coverLetter: parsed.coverLetter ?? '',
+    atsScoreBefore: parsed.atsScoreBefore ?? 0,
+    atsScoreAfter: parsed.atsScoreAfter ?? 0,
+    missingKeywords: parsed.missingKeywords ?? [],
+    improvements: parsed.improvements ?? [],
+    weakBullets: parsed.weakBullets ?? [],
+    interviewPrep: {
+      topicsToStudy: parsed.interviewPrep?.topicsToStudy ?? [],
+      likelyQuestions: parsed.interviewPrep?.likelyQuestions ?? [],
+      skillGaps: parsed.interviewPrep?.skillGaps ?? [],
+    },
+    scoreBreakdown: {
+      before: parsed.scoreBreakdown?.before ?? { keywordMatch: 0, experienceRelevance: 0, skillsAlignment: 0, formatting: 0 },
+      after: parsed.scoreBreakdown?.after ?? { keywordMatch: 0, experienceRelevance: 0, skillsAlignment: 0, formatting: 0 },
+    },
+    modelUsed: modelName,
+  };
+}
+
+function isQuotaError(message: string): boolean {
+  return (
+    message.includes('quota') ||
+    message.includes('rate') ||
+    message.includes('429') ||
+    message.includes('exceeded') ||
+    message.includes('limit') ||
+    message.includes('insufficient') ||
+    message.includes('Resource has been exhausted') ||
+    message.includes('RESOURCE_EXHAUSTED')
+  );
+}
+
+async function tryGeminiModel(
+  modelName: string,
+  apiKey: string,
+  resume: string,
+  jd: string,
+  modifier?: string,
+  label?: string
+): Promise<OptimizeResult> {
+  const genAI = new GoogleGenerativeAI(apiKey);
+  const maxTokens = modelName.includes('2.5') ? 32000 : 16000;
+  const model = genAI.getGenerativeModel({
+    model: modelName,
+    generationConfig: { temperature: 0.15, maxOutputTokens: maxTokens },
+    systemInstruction: SYSTEM_PROMPT,
+  });
+  const result = await model.generateContent(buildPrompt(resume, jd, modifier));
+  return parseResult(result.response.text(), label ?? modelName);
+}
+
+const g1 = process.env.GEMINI_API_KEY!;
+const g2 = process.env.GEMINI_API_KEY_2!;
+const g3 = process.env.GEMINI_API_KEY_3 ?? '';
+const g4 = process.env.GEMINI_API_KEY_4 ?? '';
+
+async function tryGemini25FlashK1(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-2.5-flash', g1, r, jd, m, 'gemini-2.5-flash (key 1)'); }
+async function tryGemini25FlashK2(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-2.5-flash', g2, r, jd, m, 'gemini-2.5-flash (key 2)'); }
+async function tryGemini25FlashK3(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-2.5-flash', g3, r, jd, m, 'gemini-2.5-flash (key 3)'); }
+async function tryGemini25FlashK4(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-2.5-flash', g4, r, jd, m, 'gemini-2.5-flash (key 4)'); }
+async function tryGeminiFlashLatestK1(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-flash-latest', g1, r, jd, m, 'gemini-flash-latest (key 1)'); }
+async function tryGeminiFlashLatestK2(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-flash-latest', g2, r, jd, m, 'gemini-flash-latest (key 2)'); }
+async function tryGeminiFlashLatestK3(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-flash-latest', g3, r, jd, m, 'gemini-flash-latest (key 3)'); }
+async function tryGeminiFlashLatestK4(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-flash-latest', g4, r, jd, m, 'gemini-flash-latest (key 4)'); }
+async function tryGemini3FlashK1(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-3-flash-preview', g1, r, jd, m, 'gemini-3-flash-preview (key 1)'); }
+async function tryGemini3FlashK2(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-3-flash-preview', g2, r, jd, m, 'gemini-3-flash-preview (key 2)'); }
+async function tryGemini3FlashK3(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-3-flash-preview', g3, r, jd, m, 'gemini-3-flash-preview (key 3)'); }
+async function tryGemini3FlashK4(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-3-flash-preview', g4, r, jd, m, 'gemini-3-flash-preview (key 4)'); }
+async function tryGemini31FlashLiteK1(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-3.1-flash-lite-preview', g1, r, jd, m, 'gemini-3.1-flash-lite (key 1)'); }
+async function tryGemini31FlashLiteK2(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-3.1-flash-lite-preview', g2, r, jd, m, 'gemini-3.1-flash-lite (key 2)'); }
+async function tryGemini31FlashLiteK3(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-3.1-flash-lite-preview', g3, r, jd, m, 'gemini-3.1-flash-lite (key 3)'); }
+async function tryGemini31FlashLiteK4(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-3.1-flash-lite-preview', g4, r, jd, m, 'gemini-3.1-flash-lite (key 4)'); }
+async function tryGemini25FlashLiteK1(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-2.5-flash-lite', g1, r, jd, m, 'gemini-2.5-flash-lite (key 1)'); }
+async function tryGemini25FlashLiteK2(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-2.5-flash-lite', g2, r, jd, m, 'gemini-2.5-flash-lite (key 2)'); }
+async function tryGemini25FlashLiteK3(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-2.5-flash-lite', g3, r, jd, m, 'gemini-2.5-flash-lite (key 3)'); }
+async function tryGemini25FlashLiteK4(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-2.5-flash-lite', g4, r, jd, m, 'gemini-2.5-flash-lite (key 4)'); }
+async function tryGeminiFlashLiteLatestK1(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-flash-lite-latest', g1, r, jd, m, 'gemini-flash-lite-latest (key 1)'); }
+async function tryGeminiFlashLiteLatestK2(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-flash-lite-latest', g2, r, jd, m, 'gemini-flash-lite-latest (key 2)'); }
+async function tryGeminiFlashLiteLatestK3(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-flash-lite-latest', g3, r, jd, m, 'gemini-flash-lite-latest (key 3)'); }
+async function tryGeminiFlashLiteLatestK4(r: string, jd: string, m?: string) { return tryGeminiModel('gemini-flash-lite-latest', g4, r, jd, m, 'gemini-flash-lite-latest (key 4)'); }
+
+async function tryCerebras(resume: string, jd: string, modifier?: string): Promise<OptimizeResult> {
+  const cerebras = new Cerebras({ apiKey: process.env.CEREBRAS_API_KEY! });
+  const completion = await cerebras.chat.completions.create({
+    model: 'qwen-3-235b-a22b-instruct-2507',
+    temperature: 0.15,
+    max_tokens: 8000,
+    messages: [
+      { role: 'system', content: SYSTEM_PROMPT },
+      { role: 'user', content: buildPrompt(resume, jd, modifier) },
+    ],
+  }) as unknown as { choices: { message: { content: string } }[] };
+  const text = completion.choices?.[0]?.message?.content ?? '';
+  return parseResult(text, 'cerebras-qwen-235b');
+}
+
+async function tryGroqLlama33(resume: string, jd: string, modifier?: string): Promise<OptimizeResult> {
+  const groq = new Groq({ apiKey: process.env.GROQ_API_KEY! });
+  const completion = await groq.chat.completions.create({
+    model: 'llama-3.3-70b-versatile',
+    temperature: 0.15,
+    max_tokens: 8000,
+    messages: [
+      { role: 'system', content: SYSTEM_PROMPT },
+      { role: 'user', content: buildPrompt(resume, jd, modifier) },
+    ],
+  });
+  return parseResult(completion.choices[0]?.message?.content ?? '', 'groq-llama-3.3-70b');
+}
+
+async function tryGroqLlama31(resume: string, jd: string, modifier?: string): Promise<OptimizeResult> {
+  const groq = new Groq({ apiKey: process.env.GROQ_API_KEY! });
+  const completion = await groq.chat.completions.create({
+    model: 'llama-3.1-70b-versatile',
+    temperature: 0.15,
+    max_tokens: 8000,
+    messages: [
+      { role: 'system', content: SYSTEM_PROMPT },
+      { role: 'user', content: buildPrompt(resume, jd, modifier) },
+    ],
+  });
+  return parseResult(completion.choices[0]?.message?.content ?? '', 'groq-llama-3.1-70b');
+}
+
+async function tryGroqMixtral(resume: string, jd: string, modifier?: string): Promise<OptimizeResult> {
+  const groq = new Groq({ apiKey: process.env.GROQ_API_KEY! });
+  const completion = await groq.chat.completions.create({
+    model: 'mixtral-8x7b-32768',
+    temperature: 0.15,
+    max_tokens: 8000,
+    messages: [
+      { role: 'system', content: SYSTEM_PROMPT },
+      { role: 'user', content: buildPrompt(resume, jd, modifier) },
+    ],
+  });
+  return parseResult(completion.choices[0]?.message?.content ?? '', 'groq-mixtral-8x7b');
+}
+
+async function tryMistral(resume: string, jd: string, modifier?: string): Promise<OptimizeResult> {
+  const mistral = new Mistral({ apiKey: process.env.MISTRAL_API_KEY! });
+  const completion = await mistral.chat.complete({
+    model: 'mistral-small-latest',
+    temperature: 0.15,
+    maxTokens: 8000,
+    messages: [
+      { role: 'system', content: SYSTEM_PROMPT },
+      { role: 'user', content: buildPrompt(resume, jd, modifier) },
+    ],
+  });
+  const raw = completion.choices?.[0]?.message?.content;
+  let textStr = '';
+  if (typeof raw === 'string') {
+    textStr = raw;
+  } else if (Array.isArray(raw)) {
+    textStr = raw
+      .filter((c): c is { type: 'text'; text: string } => c.type === 'text')
+      .map(c => c.text)
+      .join('');
+  }
+  return parseResult(textStr, 'mistral-small');
+}
+
+export async function optimizeResume(
+  resumeText: string,
+  jobDescription: string,
+  modifier?: string
+): Promise<OptimizeResult> {
+
+  const providers = [
+    { name: 'Gemini 2.5 Flash (key 1)',          fn: tryGemini25FlashK1,          needsKey: !!process.env.GEMINI_API_KEY },
+    { name: 'Gemini 2.5 Flash (key 2)',          fn: tryGemini25FlashK2,          needsKey: !!process.env.GEMINI_API_KEY_2 },
+    { name: 'Gemini 2.5 Flash (key 3)',          fn: tryGemini25FlashK3,          needsKey: !!g3 },
+    { name: 'Gemini 2.5 Flash (key 4)',          fn: tryGemini25FlashK4,          needsKey: !!g4 },
+    { name: 'Gemini Flash Latest (key 1)',        fn: tryGeminiFlashLatestK1,      needsKey: !!process.env.GEMINI_API_KEY },
+    { name: 'Gemini Flash Latest (key 2)',        fn: tryGeminiFlashLatestK2,      needsKey: !!process.env.GEMINI_API_KEY_2 },
+    { name: 'Gemini Flash Latest (key 3)',        fn: tryGeminiFlashLatestK3,      needsKey: !!g3 },
+    { name: 'Gemini Flash Latest (key 4)',        fn: tryGeminiFlashLatestK4,      needsKey: !!g4 },
+    { name: 'Gemini 3 Flash Preview (key 1)',     fn: tryGemini3FlashK1,           needsKey: !!process.env.GEMINI_API_KEY },
+    { name: 'Gemini 3 Flash Preview (key 2)',     fn: tryGemini3FlashK2,           needsKey: !!process.env.GEMINI_API_KEY_2 },
+    { name: 'Gemini 3 Flash Preview (key 3)',     fn: tryGemini3FlashK3,           needsKey: !!g3 },
+    { name: 'Gemini 3 Flash Preview (key 4)',     fn: tryGemini3FlashK4,           needsKey: !!g4 },
+    { name: 'Gemini 3.1 Flash Lite (key 1)',      fn: tryGemini31FlashLiteK1,      needsKey: !!process.env.GEMINI_API_KEY },
+    { name: 'Gemini 3.1 Flash Lite (key 2)',      fn: tryGemini31FlashLiteK2,      needsKey: !!process.env.GEMINI_API_KEY_2 },
+    { name: 'Gemini 3.1 Flash Lite (key 3)',      fn: tryGemini31FlashLiteK3,      needsKey: !!g3 },
+    { name: 'Gemini 3.1 Flash Lite (key 4)',      fn: tryGemini31FlashLiteK4,      needsKey: !!g4 },
+    { name: 'Gemini 2.5 Flash Lite (key 1)',      fn: tryGemini25FlashLiteK1,      needsKey: !!process.env.GEMINI_API_KEY },
+    { name: 'Gemini 2.5 Flash Lite (key 2)',      fn: tryGemini25FlashLiteK2,      needsKey: !!process.env.GEMINI_API_KEY_2 },
+    { name: 'Gemini 2.5 Flash Lite (key 3)',      fn: tryGemini25FlashLiteK3,      needsKey: !!g3 },
+    { name: 'Gemini 2.5 Flash Lite (key 4)',      fn: tryGemini25FlashLiteK4,      needsKey: !!g4 },
+    { name: 'Gemini Flash Lite Latest (key 1)',   fn: tryGeminiFlashLiteLatestK1,  needsKey: !!process.env.GEMINI_API_KEY },
+    { name: 'Gemini Flash Lite Latest (key 2)',   fn: tryGeminiFlashLiteLatestK2,  needsKey: !!process.env.GEMINI_API_KEY_2 },
+    { name: 'Gemini Flash Lite Latest (key 3)',   fn: tryGeminiFlashLiteLatestK3,  needsKey: !!g3 },
+    { name: 'Gemini Flash Lite Latest (key 4)',   fn: tryGeminiFlashLiteLatestK4,  needsKey: !!g4 },
+    { name: 'Cerebras Qwen 235B',                 fn: tryCerebras,                 needsKey: !!process.env.CEREBRAS_API_KEY },
+    { name: 'Groq Llama 3.3 70B',                fn: tryGroqLlama33,              needsKey: !!process.env.GROQ_API_KEY },
+    { name: 'Groq Llama 3.1 70B',                fn: tryGroqLlama31,              needsKey: !!process.env.GROQ_API_KEY },
+    { name: 'Groq Mixtral 8x7B',                 fn: tryGroqMixtral,              needsKey: !!process.env.GROQ_API_KEY },
+    { name: 'Mistral Small',                      fn: tryMistral,                  needsKey: !!process.env.MISTRAL_API_KEY },
+  ];
+
+  let lastError: Error | null = null;
+
+  for (const provider of providers) {
+    if (!provider.needsKey) {
+      console.log(`Skipping ${provider.name} — no API key configured`);
+      continue;
+    }
+    try {
+      console.log(`Trying: ${provider.name}`);
+      const result = await provider.fn(resumeText, jobDescription, modifier);
+      console.log(`✓ Success: ${provider.name}`);
+      return result;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.warn(`✗ ${provider.name} failed: ${message.slice(0, 120)}`);
+      lastError = err instanceof Error ? err : new Error(message);
+      continue;
+    }
+  }
+
+  throw lastError ?? new Error('All AI providers exhausted. Please try again in a few minutes.');
+}
+</file>
+
+<file path="src/app/page.tsx">
+'use client';
+import { useState, useCallback, useRef, useEffect } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { Upload, FileText, Briefcase, Copy, Check, AlertCircle, ArrowRight, Sparkles, TrendingUp, AlertTriangle, BookOpen, MessageSquare, Target } from 'lucide-react';
+import Link from 'next/link';
+import { UserButton, useUser, SignInButton } from '@clerk/nextjs';
+
+function getFingerprint(): string {
+  const key = 'rz_fp';
+  let fp = localStorage.getItem(key);
+  if (!fp) {
+    fp = Math.random().toString(36).slice(2) + Date.now().toString(36);
+    localStorage.setItem(key, fp);
+  }
+  return fp;
+}
+
+interface ScoreBreakdown {
+  keywordMatch: number;
+  experienceRelevance: number;
+  skillsAlignment: number;
+  formatting: number;
+}
+
+interface OptimizeResult {
+  optimizedResume: string;
+  coverLetter: string;
+  atsScoreBefore: number;
+  atsScoreAfter: number;
+  missingKeywords: string[];
+  improvements: string[];
+  weakBullets: string[];
+  interviewPrep: {
+    topicsToStudy: string[];
+    likelyQuestions: string[];
+    skillGaps: string[];
+  };
+  scoreBreakdown: {
+    before: ScoreBreakdown;
+    after: ScoreBreakdown;
+  };
+  modelUsed?: string;
+  usageCount: number;
+  usageRemaining: number;
+}
+
+function CopyButton({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+  return (
+    <button onClick={copy} className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs transition-all"
+      style={{ background: copied ? 'var(--green-dim)' : 'var(--surface-2)', color: copied ? 'var(--green)' : 'var(--text-secondary)', border: '1px solid var(--border)', cursor: 'pointer' }}>
+      {copied ? <Check size={12} /> : <Copy size={12} />}
+      {copied ? 'Copied' : 'Copy'}
+    </button>
+  );
+}
+
+function ScoreRing({ score, label }: { score: number; label: string }) {
+  const [displayed, setDisplayed] = useState(0);
+  const r = 28;
+  const circ = 2 * Math.PI * r;
+  const filled = (displayed / 100) * circ;
+  const color = score >= 75 ? '#4ade80' : score >= 50 ? '#d4a853' : '#f87171';
+
+  useEffect(() => {
+    setDisplayed(0);
+    let start = 0;
+    const duration = 1200;
+    const startTime = performance.now();
+
+    const animate = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      start = Math.round(eased * score);
+      setDisplayed(start);
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+
+    requestAnimationFrame(animate);
+  }, [score]);
+
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <svg width="72" height="72" viewBox="0 0 72 72">
+        <circle cx="36" cy="36" r={r} fill="none" stroke="var(--border)" strokeWidth="4" />
+        <circle cx="36" cy="36" r={r} fill="none" stroke={color} strokeWidth="4"
+          strokeDasharray={`${filled} ${circ - filled}`} strokeDashoffset={circ / 4}
+          strokeLinecap="round" />
+        <text x="36" y="33" textAnchor="middle" fill={color}
+          style={{ fontFamily: 'DM Mono', fontSize: '14px', fontWeight: 500 }}>{displayed}</text>
+        <text x="36" y="46" textAnchor="middle" fill="var(--text-muted)"
+          style={{ fontFamily: 'DM Sans', fontSize: '9px' }}>/ 100</text>
+      </svg>
+      <span className="font-mono" style={{ fontSize: 10, color: 'var(--text-muted)' }}>{label}</span>
+    </div>
+  );
+}
+
+function ScoreBar({ label, before, after }: { label: string; before: number; after: number }) {
+  const [displayedAfter, setDisplayedAfter] = useState(0);
+  const afterColor = after >= 70 ? 'var(--green)' : after >= 50 ? 'var(--accent)' : 'var(--red)';
+
+  useEffect(() => {
+    setDisplayedAfter(0);
+    const duration = 1400;
+    const startTime = performance.now();
+    const animate = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplayedAfter(Math.round(eased * after));
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
+  }, [after]);
+
+  return (
+    <div>
+      <div className="flex justify-between mb-1">
+        <span className="font-mono" style={{ fontSize: 10, color: 'var(--text-muted)' }}>{label}</span>
+        <span className="font-mono" style={{ fontSize: 10, color: 'var(--text-secondary)' }}>
+          <span style={{ color: 'var(--text-muted)', textDecoration: 'line-through', marginRight: 6 }}>{before}</span>
+          {displayedAfter}
+        </span>
+      </div>
+      <div style={{ height: 4, background: 'var(--surface-2)', borderRadius: 2, overflow: 'hidden', position: 'relative' }}>
+        <div style={{ position: 'absolute', left: 0, top: 0, width: `${before}%`, height: '100%', background: 'var(--border)', borderRadius: 2 }} />
+        <div style={{ position: 'absolute', left: 0, top: 0, width: `${displayedAfter}%`, height: '100%', background: afterColor, borderRadius: 2 }} />
+      </div>
+    </div>
+  );
+}
+
+function LoadingProgress() {
+  const steps = [
+    'Reading your resume...',
+    'Analyzing job description...',
+    'Mapping keywords to bullets...',
+    'Rewriting bullet points...',
+    'Scoring ATS match...',
+    'Generating cover letter...',
+    'Finalizing output...',
+  ];
+  const pcts = [10, 24, 38, 54, 70, 84, 96];
+  const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    const timings = [1200, 2500, 3500, 5000, 4000, 4000, 2000];
+    let current = 0;
+    const advance = () => {
+      if (current < steps.length - 1) {
+        current++;
+        setStep(current);
+        setTimeout(advance, timings[current]);
+      }
+    };
+    const t = setTimeout(advance, timings[0]);
+    return () => clearTimeout(t);
+  }, []);
+
+  return (
+    <div style={{ width: '100%', padding: '2px 0' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ display: 'flex', gap: 4 }}>
+            {[0, 1, 2].map(i => (
+              <span key={i} className="pulse-dot inline-block w-1 h-1 rounded-full"
+                style={{ background: 'var(--accent)', animationDelay: `${i * 0.2}s` }} />
+            ))}
+          </div>
+          <span className="font-mono" style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
+            {steps[step]}
+          </span>
+        </div>
+        <span className="font-mono" style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+          {pcts[Math.min(step, pcts.length - 1)]}%
+        </span>
+      </div>
+      <div style={{ height: 2, background: 'var(--border)', borderRadius: 1, overflow: 'hidden' }}>
+        <div style={{
+          height: '100%',
+          width: `${pcts[Math.min(step, pcts.length - 1)]}%`,
+          background: 'var(--accent)',
+          borderRadius: 1,
+          transition: 'width 1.5s ease',
+        }} />
+      </div>
+    </div>
+  );
+}
+
+const REGEN_OPTIONS = [
+  {
+    value: 'Rewrite this resume with maximum ATS aggression — inject every possible JD keyword naturally, prioritize ATS score above all else, accept slightly less natural phrasing if it means higher keyword density',
+    label: 'Max ATS aggressive',
+  },
+  {
+    value: "Rewrite with minimal changes — only add missing keywords where they fit naturally, preserve the candidate's original voice and phrasing as much as possible",
+    label: 'Preserve my style',
+  },
+  {
+    value: 'Rewrite all bullets to be shorter and punchier — maximum one tight line each, cut all filler, every word must earn its place',
+    label: 'Shorter bullets',
+  },
+  {
+    value: 'Rewrite with a senior engineer tone — use assertive language, strong ownership verbs like architected/led/owned/drove, frame every project as a confident senior contributor',
+    label: 'Senior/confident tone',
+  },
+  {
+    value: 'Rewrite for an internship or entry-level role — softer claims, emphasize learning and contribution, frame projects as collaborative and initiative-driven',
+    label: 'Entry level tone',
+  },
+  {
+    value: 'Focus on adding metrics and scope to every bullet — find every possible place to add qualitative or quantitative scale, use phrases like "across X modules", "for Y agents", "handling Z features"',
+    label: 'Add more metrics',
+  },
+  { value: 'custom', label: '✏ Custom instruction' },
+];
+
+export default function Home() {
+  const { user, isLoaded } = useUser();
+  const [resumeText, setResumeText] = useState('');
+  const [uploadedFileName, setUploadedFileName] = useState('');
+  const [jobDescription, setJobDescription] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<OptimizeResult | null>(null);
+  const [error, setError] = useState('');
+  const [activeTab, setActiveTab] = useState<'resume' | 'cover'>('resume');
+  const [activeSection, setActiveSection] = useState<'analysis' | 'prep'>('analysis');
+  const [usageCount, setUsageCount] = useState(0);
+  const [pdfQualityWarning, setPdfQualityWarning] = useState(false);
+  const [pendingRawText, setPendingRawText] = useState('');
+  const [pdfIsStructured, setPdfIsStructured] = useState(true);
+  const [downloading, setDownloading] = useState(false);
+  const [regenModifier, setRegenModifier] = useState('');
+  const [regenCustom, setRegenCustom] = useState('');
+  const [regenLoading, setRegenLoading] = useState(false);
+  const [showRegenCustom, setShowRegenCustom] = useState(false);
+  const [prevResult, setPrevResult] = useState<OptimizeResult | null>(null);
+  const [lastRegenModifier, setLastRegenModifier] = useState('');
+  const [linkedinUrl, setLinkedinUrl] = useState('');
+  const [linkedinLoading, setLinkedinLoading] = useState(false);
+  const [linkedinError, setLinkedinError] = useState('');
+  const [regenCount, setRegenCount] = useState(0);
+  const MAX_REGENS = 1;
+  const resultsRef = useRef<HTMLDivElement>(null);
+  const FREE_LIMIT = 2;
+  const isDev = process.env.NODE_ENV === 'development';
+  const isAdminUser = user?.id === process.env.NEXT_PUBLIC_ADMIN_USER_ID;
+  const usageRemaining = isDev || isAdminUser ? FREE_LIMIT : FREE_LIMIT - usageCount;
+
+  useEffect(() => {
+    const reopened = localStorage.getItem('rz_reopen');
+    if (reopened) {
+      try {
+        const parsed = JSON.parse(reopened);
+        setResult(parsed);
+        localStorage.removeItem('rz_reopen');
+        setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+      } catch {
+        localStorage.removeItem('rz_reopen');
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    const fp = getFingerprint();
+    const usageKey = user?.id || fp;
+    fetch('/api/usage?fp=' + usageKey)
+      .then(r => r.json())
+      .then(d => setUsageCount(d.count ?? 0))
+      .catch(() => {});
+  }, [isLoaded, user]);
+
+  const onDrop = useCallback(async (files: File[]) => {
+    const file = files[0];
+    if (!file) return;
+    if (file.type === 'text/plain') {
+      const text = await file.text();
+      setResumeText(text);
+      setUploadedFileName(file.name);
+      setPdfIsStructured(true);
+      return;
+    }
+    try {
+      const pdfjsLib = await import('pdfjs-dist');
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      type TextItem = { str: string; transform: number[]; height: number };
+      const allLines: { y: number; text: string; x: number; fontSize: number }[] = [];
+
+      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        const page = await pdf.getPage(pageNum);
+        const content = await page.getTextContent();
+        const viewport = page.getViewport({ scale: 1 });
+        const pageHeight = viewport.height;
+        const items = content.items as TextItem[];
+        const lineMap = new Map<number, { parts: string[]; x: number; fontSize: number }>();
+
+        for (const item of items) {
+          if (!item.str) continue;
+          const rawY = item.transform[5];
+          const x = item.transform[4];
+          const fontSize = item.height || 10;
+          const y = Math.round((pageHeight - rawY) / 3) * 3;
+          if (!lineMap.has(y)) lineMap.set(y, { parts: [], x, fontSize });
+          lineMap.get(y)!.parts.push(item.str);
+        }
+
+        const sortedYs = Array.from(lineMap.keys()).sort((a, b) => a - b);
+        let prevY: number | null = null;
+        for (const y of sortedYs) {
+          const { parts, x, fontSize } = lineMap.get(y)!;
+          const lineText = parts.join('').replace(/\s+/g, ' ').trim();
+          if (!lineText) continue;
+          if (prevY !== null && y - prevY > 18) allLines.push({ y: -1, text: '', x: 0, fontSize: 0 });
+          allLines.push({ y, text: lineText, x, fontSize });
+          prevY = y;
+        }
+        if (pageNum < pdf.numPages) allLines.push({ y: -1, text: '', x: 0, fontSize: 0 });
+      }
+
+      const nonBlankLines = allLines.filter(l => l.text.length > 0);
+      const avgLineLength = nonBlankLines.reduce((s, l) => s + l.text.length, 0) / (nonBlankLines.length || 1);
+      const hasShortLines = nonBlankLines.filter(l => l.text.length < 80).length > nonBlankLines.length * 0.4;
+      const hasSections = nonBlankLines.some(l => l.text === l.text.toUpperCase() && l.text.length > 2 && l.text.length < 40);
+      const isGoodQuality = nonBlankLines.length > 8 && avgLineLength < 150 && hasShortLines;
+      const extractedText = allLines.map(l => l.text).join('\n').replace(/\n{3,}/g, '\n\n').trim();
+
+      if (isGoodQuality) {
+        setResumeText(extractedText);
+        setPdfIsStructured(true);
+        setPdfQualityWarning(false);
+        setUploadedFileName(file.name);
+      } else {
+        setPendingRawText(extractedText);
+        setPdfIsStructured(false);
+        setPdfQualityWarning(true);
+      }
+    } catch {
+      setError('Could not read this PDF. Please paste your resume text instead.');
+    }
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { 'application/pdf': ['.pdf'], 'text/plain': ['.txt'] },
+    maxFiles: 1,
+  });
+
+  const callOptimize = async (modifier?: string) => {
+    const fp = getFingerprint();
+    const res = await fetch('/api/optimize', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ resumeText, jobDescription, fingerprint: fp, modifier }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Something went wrong.');
+    return data;
+  };
+
+  const handleGenerate = async () => {
+    if (!user) {
+      // Trigger sign in modal
+      document.querySelector<HTMLButtonElement>('[data-clerk-sign-in]')?.click();
+      setError('Please sign in to optimize your resume.');
+      return;
+    }
+    if (!resumeText.trim()) { setError('Please add your resume.'); return; }
+    if (!jobDescription.trim()) { setError('Please paste a job description.'); return; }
+    setError('');
+    setLoading(true);
+    setResult(null);
+    try {
+      const data = await callOptimize();
+      setResult(data);
+      setRegenCount(0);
+      setUsageCount(data.usageCount);
+      setRegenModifier('');
+      setRegenCustom('');
+      setShowRegenCustom(false);
+      setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Something went wrong.';
+      if (msg === 'FREE_LIMIT_REACHED') {
+        setError("You've used your 2 free optimizations. Paid plans coming soon!");
+      } else {
+        setError(msg);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRegenerate = async () => {
+    if (!resumeText.trim() || !jobDescription.trim()) return;
+    const modifier = regenModifier === 'custom' ? regenCustom.trim() : regenModifier;
+    if (!modifier) { setError('Please select a regeneration option.'); return; }
+
+    // Enforce regen limit for non-admin users
+    if (!isAdminUser && regenCount >= MAX_REGENS) {
+      setError('You have used your 1 free regeneration. Generate a new optimization to get another.');
+      return;
+    }
+
+    setError('');
+    setRegenLoading(true);
+
+    try {
+      const data = await callOptimize(modifier);
+      setResult(data);
+      if (!isAdminUser) setRegenCount(prev => prev + 1);
+      setLastRegenModifier(regenModifier === 'custom' ? regenCustom.trim() : REGEN_OPTIONS.find(o => o.value === regenModifier)?.label ?? modifier);
+      setPrevResult(result);
+      setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong.');
+    } finally {
+      setRegenLoading(false);
+    }
+  };
+  const handleLinkedinScrape = async () => {
+    if (!linkedinUrl.trim()) return;
+    setLinkedinLoading(true);
+    setLinkedinError('');
+    try {
+      const res = await fetch('/api/scrape-jd', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: linkedinUrl }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.text) {
+        setLinkedinError("Couldn't fetch this URL, paste the JD manually.");
+        return;
+      }
+      setJobDescription(data.text);
+      setLinkedinUrl('');
+    } catch {
+      setLinkedinError("Couldn't fetch this URL, paste the JD manually.");
+    } finally {
+      setLinkedinLoading(false);
+    }
+  };
+  const handleDownload = async () => {
+    if (!result || downloading) return;
+    setDownloading(true);
+    try {
+      const firstLine = result.optimizedResume.split('\n')[0] ?? '';
+      const name = firstLine
+        .split(/[,•|]/)[0]
+        .replace(/\b(Bangalore|Mumbai|Delhi|Chennai|Hyderabad|Pune|India|USA|UK)\b.*/i, '')
+        .trim() || 'Candidate';
+      if (activeTab === 'resume') {
+        if (!pdfIsStructured) {
+          await navigator.clipboard.writeText(result.optimizedResume);
+          alert('PDF formatting unavailable for this layout. Text copied to clipboard.');
+          return;
+        }
+        const { downloadResumePDF } = await import('@/lib/download');
+        downloadResumePDF(result.optimizedResume, uploadedFileName || name);
+      } else {
+        const { downloadCoverLetterDOCX } = await import('@/lib/download');
+        await downloadCoverLetterDOCX(result.coverLetter, name);
+      }
+    } catch {
+      setError('Download failed. Try copying instead.');
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  return (
+    <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
+
+      {/* Nav */}
+      <nav style={{
+        border: '1px solid transparent',
+        backgroundImage: 'linear-gradient(rgba(10,10,10,0.92), rgba(10,10,10,0.92)), linear-gradient(90deg, transparent 0%, rgba(212,168,83,0.25) 50%, transparent 100%)',
+        backgroundOrigin: 'border-box',
+        backgroundClip: 'padding-box, border-box',
+        borderTop: 'none',
+        borderLeft: 'none',
+        borderRight: 'none',
+        padding: '0 32px', height: '64px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        position: 'sticky', top: 0,
+        backdropFilter: 'blur(16px)', zIndex: 50,
+      }}>
+        {/* Logo */}
+        <span className="font-display" style={{ color: 'var(--accent)', letterSpacing: '-0.03em', fontSize: 24 }}>
+          resumeai
+        </span>
+        {/* Right side */}
+        <div className="flex items-center gap-4">
+          {isLoaded && !user ? (
+            <>
+              <span className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>
+                Free to start
+              </span>
+              <SignInButton mode="modal">
+                <button className="font-mono text-xs" style={{
+                  padding: '7px 16px', borderRadius: 6,
+                  border: '1px solid var(--accent)',
+                  background: 'var(--accent-dim)',
+                  color: 'var(--accent)',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}>
+                  sign in
+                </button>
+              </SignInButton>
+            </>
+          ) : isLoaded && user ? (
+            <>
+              {/* Usage pill */}
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 8,
+                padding: '5px 12px', borderRadius: 20,
+                background: 'var(--surface)',
+                border: '1px solid var(--border)',
+              }}>
+                <div style={{
+                  width: 6, height: 6, borderRadius: '50%',
+                  background: usageRemaining > 0 ? 'var(--green)' : 'var(--red)',
+                  boxShadow: usageRemaining > 0 ? '0 0 6px rgba(74,222,128,0.6)' : '0 0 6px rgba(248,113,113,0.6)',
+                }} />
+                <span className="font-mono" style={{ fontSize: 11, color: 'var(--text-secondary)' }}>
+                  {usageRemaining} free {usageRemaining === 1 ? 'optimization' : 'optimizations'}
+                </span>
+              </div>
+
+              {/* Upgrade button */}
+              <button className="font-mono text-xs" style={{
+                padding: '6px 14px', borderRadius: 6,
+                border: '1px solid rgba(212,168,83,0.4)',
+                background: 'var(--accent-dim)',
+                color: 'var(--accent)',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                letterSpacing: '0.02em',
+              }}
+                onClick={() => alert('Paid plans coming soon! 🚀')}
+              >
+                upgrade ✦
+              </button>
+
+              <Link href="/history" className="font-mono text-xs"
+                style={{ color: 'var(--text-muted)', textDecoration: 'none', padding: '6px 10px', borderRadius: 6, border: '1px solid transparent', transition: 'all 0.2s' }}
+                onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--border)')}
+                onMouseLeave={e => (e.currentTarget.style.borderColor = 'transparent')}
+              >
+                history
+              </Link>
+              <UserButton />
+            </>
+          ) : null}
+        </div>
+      </nav>
+
+      {/* Hero */}
+      <section style={{ padding: '80px 24px 64px', maxWidth: 760, margin: '0 auto' }}>
+        <span className="font-mono text-xs" style={{ color: 'var(--accent)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>AI Resume Optimizer</span>
+        <h1 className="font-display" style={{ fontSize: 'clamp(36px, 6vw, 64px)', lineHeight: 1.1, letterSpacing: '-0.03em', margin: '16px 0 20px', color: 'var(--text-primary)' }}>
+          Land more interviews.<br /><em style={{ color: 'var(--accent)' }}>Automatically.</em>
+        </h1>
+        <p style={{ fontSize: 16, lineHeight: 1.7, color: 'var(--text-secondary)', maxWidth: 520, fontWeight: 300 }}>
+          Paste your resume and a job description. Our AI rewrites your bullets, scores your ATS match, and gives you an interview prep plan — in seconds.
+        </p>
+        <div style={{ display: 'flex', gap: 48, marginTop: 32 }}>
+          {[{ n: '3×', label: 'more interviews' }, { n: '<30s', label: 'to optimize' }, { n: 'Free', label: 'to start' }].map(s => (
+            <div key={s.label} style={{ minWidth: 80 }}>
+              <div className="font-mono" style={{ fontSize: 22, color: 'var(--text-primary)', fontWeight: 500 }}>{s.n}</div>
+              <div style={{ fontSize: 12, marginTop: 4, color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section style={{ padding: '0 24px 80px', maxWidth: 760, margin: '0 auto' }}>
+        <div className="flex items-center gap-4 mb-10">
+          <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+          <span className="font-mono text-xs" style={{ color: 'var(--text-muted)', letterSpacing: '0.1em' }}>how it works</span>
+          <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+          {[
+            { n: '01', title: 'Upload your resume', desc: 'Paste your resume text or drop a PDF. We extract the content and preserve your structure.', icon: '↑' },
+            { n: '02', title: 'Paste the job description', desc: 'Copy the full JD from any job board — LinkedIn, Naukri, Wellfound, company sites.', icon: '⎘' },
+            { n: '03', title: 'Get your optimized resume', desc: 'AI rewrites your bullets, scores your ATS match, generates a cover letter, and preps you for the interview.', icon: '✦' },
+          ].map(step => (
+            <div key={step.n} style={{ padding: 24, borderRadius: 12, background: 'var(--surface)', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span className="font-mono" style={{ fontSize: 11, color: 'var(--text-muted)' }}>{step.n}</span>
+                <span style={{ fontSize: 18, color: 'var(--accent)' }}>{step.icon}</span>
+              </div>
+              <p className="font-mono" style={{ fontSize: 13, color: 'var(--text-primary)', fontWeight: 500 }}>{step.title}</p>
+              <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{step.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Inputs */}
+      <section style={{ padding: '0 24px 80px', maxWidth: 760, margin: '0 auto' }}>
+        <div style={{ marginBottom: 20 }}>
+          <div className="flex items-center justify-between mb-3">
+            <label className="flex items-center gap-2 text-sm font-mono" style={{ color: 'var(--text-secondary)' }}>
+              <FileText size={14} style={{ color: 'var(--accent)' }} /> your resume
+            </label>
+            {!uploadedFileName && (
+              <div {...getRootProps()} style={{ padding: '6px 12px', border: '1px dashed var(--border)', borderRadius: 6, cursor: 'pointer', fontSize: 12, color: isDragActive ? 'var(--accent)' : 'var(--text-muted)', borderColor: isDragActive ? 'var(--accent)' : 'var(--border)', transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <input {...getInputProps()} />
+                <Upload size={11} />
+                {isDragActive ? 'Drop it here' : 'Upload PDF or .txt'}
+              </div>
+            )}
+          </div>
+
+          {pdfQualityWarning && (
+            <div style={{ marginBottom: 12, padding: '16px 20px', borderRadius: 10, background: 'rgba(212,168,83,0.06)', border: '1px solid rgba(212,168,83,0.3)' }}>
+              <p className="font-mono text-xs mb-1" style={{ color: 'var(--accent)' }}>⚠ pdf layout warning</p>
+              <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                We couldn't detect a clean structure in your PDF. You'll get a <strong style={{ color: 'var(--text-primary)' }}>text output</strong> instead of a formatted PDF download.
+              </p>
+              <div className="flex gap-3">
+                <button onClick={() => { setResumeText(pendingRawText); setPdfQualityWarning(false); setUploadedFileName('resume.pdf'); }}
+                  style={{ padding: '8px 16px', borderRadius: 6, border: 'none', background: 'var(--accent)', color: '#0a0a0a', fontFamily: 'DM Mono', fontSize: 12, cursor: 'pointer', fontWeight: 500 }}>
+                  Continue anyway
+                </button>
+                <button onClick={() => { setPdfQualityWarning(false); setPendingRawText(''); setResumeText(''); setUploadedFileName(''); }}
+                  style={{ padding: '8px 16px', borderRadius: 6, border: '1px solid var(--border)', background: 'transparent', color: 'var(--text-muted)', fontFamily: 'DM Mono', fontSize: 12, cursor: 'pointer' }}>
+                  Cancel — paste text instead
+                </button>
+              </div>
+            </div>
+          )}
+
+          {uploadedFileName && !pdfQualityWarning ? (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderRadius: 8, background: 'var(--surface)', border: '1px solid var(--border)' }}>
+              <div className="flex items-center gap-3">
+                <div style={{ width: 36, height: 36, borderRadius: 6, background: 'var(--accent-dim)', border: '1px solid rgba(212,168,83,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <FileText size={16} style={{ color: 'var(--accent)' }} />
+                </div>
+                <div>
+                  <p className="text-sm font-mono" style={{ color: 'var(--text-primary)' }}>{uploadedFileName}</p>
+                  <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>
+                    {resumeText.split(/\s+/).filter(Boolean).length} words extracted
+                    {pdfIsStructured
+                      ? <span style={{ color: 'var(--green)', marginLeft: 8 }}>✓ structure detected</span>
+                      : <span style={{ color: 'var(--accent)', marginLeft: 8 }}>⚠ text only mode</span>}
+                  </p>
+                </div>
+              </div>
+              <button onClick={() => { setUploadedFileName(''); setResumeText(''); setPdfIsStructured(true); }}
+                style={{ background: 'transparent', border: '1px solid var(--border)', borderRadius: 6, padding: '6px 12px', cursor: 'pointer', fontSize: 12, color: 'var(--text-muted)', fontFamily: 'DM Mono' }}>
+                ✕ Remove
+              </button>
+            </div>
+          ) : !pdfQualityWarning ? (
+            <div {...getRootProps()} style={{ border: '1px dashed var(--border)', borderRadius: 8, cursor: 'text', borderColor: isDragActive ? 'var(--accent)' : 'var(--border)', transition: 'all 0.2s' }}>
+              <input {...getInputProps()} />
+              <textarea rows={12}
+                placeholder={"Paste your resume text here, or drop a PDF above...\n\nInclude your work experience, education, skills, and any other relevant sections."}
+                value={resumeText} onChange={e => setResumeText(e.target.value)} onClick={e => e.stopPropagation()} />
+            </div>
+          ) : null}
+        </div>
+        <div style={{ marginBottom: 24 }}>
+          <label className="flex items-center gap-2 text-sm font-mono mb-3" style={{ color: 'var(--text-secondary)' }}>
+            <Briefcase size={14} style={{ color: 'var(--accent)' }} /> job description
+          </label>
+          <div style={{ marginBottom: 12, display: 'flex', gap: 8 }}>
+            <input
+              type="text"
+              placeholder="Paste Naukri / Wellfound / internshala / Indeed job URL to auto-fill..."
+              value={linkedinUrl}
+              onChange={e => setLinkedinUrl(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleLinkedinScrape()}
+              style={{
+                flex: 1, padding: '10px 14px',
+                background: 'var(--surface)', border: '1px solid var(--border)',
+                borderRadius: 8, color: 'var(--text-primary)',
+                fontFamily: 'DM Mono', fontSize: 12, outline: 'none',
+              }}
+            />
+            <button
+              onClick={handleLinkedinScrape}
+              disabled={linkedinLoading || !linkedinUrl.trim()}
+              className="font-mono text-xs"
+              style={{
+                padding: '10px 16px', borderRadius: 8,
+                cursor: linkedinLoading || !linkedinUrl.trim() ? 'not-allowed' : 'pointer',
+                border: '1px solid var(--border)', background: 'var(--surface-2)',
+                color: linkedinLoading || !linkedinUrl.trim() ? 'var(--text-muted)' : 'var(--text-secondary)',
+                whiteSpace: 'nowrap', transition: 'all 0.2s',
+              }}>
+              {linkedinLoading ? '...' : '↓ fetch JD'}
+            </button>
+          </div>
+          {linkedinError && (
+            <p className="font-mono text-xs mb-2" style={{ color: 'var(--text-muted)' }}>
+              ⚠ {linkedinError}
+            </p>
+          )}
+          <textarea rows={10}
+            placeholder={"Paste the full job description here...\n\nInclude the role requirements, responsibilities, and any listed skills or qualifications."}
+            value={jobDescription}
+            onChange={e => {
+              setJobDescription(e.target.value);
+              // Reset regen count if JD changes after an optimization
+              if (result) setRegenCount(0);
+            }}
+            readOnly={!!result && regenCount > 0 && !isAdminUser}
+            style={{ opacity: !!result && regenCount > 0 && !isAdminUser ? 0.6 : 1 }}
+          />
+          {jobDescription.trim() && (() => {
+            const words = jobDescription.trim().split(/\s+/).length;
+            const isShort = words < 80;
+            const isGood = words >= 80 && words < 250;
+            const isDetailed = words >= 250;
+            return (
+              <div className="flex items-center justify-between mt-2">
+                <div className="flex items-center gap-2">
+                  <div style={{
+                    width: 5, height: 5, borderRadius: '50%',
+                    background: isShort ? 'var(--red)' : isGood ? 'var(--accent)' : 'var(--green)',
+                  }} />
+                  <span className="font-mono text-xs" style={{
+                    color: isShort ? 'var(--red)' : isGood ? 'var(--accent)' : 'var(--green)',
+                  }}>
+                    {isShort && '⚠ Too short — paste the full JD for best results'}
+                    {isGood && '✓ Good length'}
+                    {isDetailed && '✓ Detailed JD — great for optimization'}
+                  </span>
+                </div>
+                <span className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>
+                  {words} words
+                </span>
+              </div>
+            );
+          })()}
+        </div>
+
+        {error && (
+          <div className="flex items-start gap-3 mb-4 rounded-lg p-4" style={{ background: 'rgba(248,113,113,0.06)', border: '1px solid rgba(248,113,113,0.2)' }}>
+            <AlertCircle size={16} style={{ color: 'var(--red)', marginTop: 1, flexShrink: 0 }} />
+            <p className="text-sm" style={{ color: 'var(--red)' }}>{error}</p>
+          </div>
+        )}
+
+        <button onClick={handleGenerate} disabled={loading || (!user && isLoaded)}
+          className="w-full flex items-center justify-center gap-3 font-mono text-sm transition-all"
+          style={{ padding: '16px 24px', borderRadius: 10, minHeight: 56, background: loading ? 'var(--surface-2)' : !user && isLoaded ? 'var(--surface-2)' : usageRemaining <= 0 ? 'var(--surface)' : 'var(--accent)', color: !user && isLoaded ? 'var(--text-muted)' : usageRemaining <= 0 ? 'var(--text-muted)' : loading ? 'var(--text-secondary)' : '#0a0a0a', border: loading ? '1px solid var(--border)' : 'none', cursor: loading || usageRemaining <= 0 || (!user && isLoaded) ? 'not-allowed' : 'pointer', fontWeight: 500, letterSpacing: '0.02em' }}>
+          {loading ? <LoadingProgress /> : !user && isLoaded ? (
+            <><Sparkles size={16} />Sign in to Get Started<ArrowRight size={16} /></>
+          ) : usageRemaining <= 0 ? <>Upgrade for more optimizations</> : (
+            <><Sparkles size={16} />Generate Full Optimization<ArrowRight size={16} /></>
+          )}
+        </button>
+        {!loading && usageRemaining > 0 && (
+          <p className="text-center text-xs mt-3 font-mono" style={{ color: 'var(--text-muted)' }}>
+            {usageRemaining} of {FREE_LIMIT} free optimization{usageRemaining !== 1 ? 's' : ''} remaining
+          </p>
+        )}
+      </section>
+
+      {/* Results */}
+      {result && (
+        <section ref={resultsRef} style={{ padding: '0 24px 40px', maxWidth: 760, margin: '0 auto' }}>
+          <div className="flex items-center gap-4 mb-8">
+            <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+            <span className="font-mono text-xs" style={{ color: 'var(--accent)' }}>results</span>
+            <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+          </div>
+
+          {result.modelUsed && (
+            <p className="font-mono text-xs mb-4" style={{ color: 'var(--text-muted)', textAlign: 'right' }}>
+              generated with {result.modelUsed}
+            </p>
+          )}
+
+          {prevResult && lastRegenModifier && (
+            <div style={{
+              padding: '16px 20px', borderRadius: 10, marginBottom: 16,
+              background: 'rgba(74,222,128,0.04)',
+              border: '1px solid rgba(74,222,128,0.2)',
+            }}>
+              <p className="font-mono text-xs mb-3" style={{ color: 'var(--green)' }}>
+                ↺ regenerated with: {lastRegenModifier}
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div>
+                  <p className="font-mono text-xs mb-2" style={{ color: 'var(--text-muted)' }}>score change</p>
+                  <p className="font-mono text-sm" style={{ color: 'var(--green)' }}>
+                    {prevResult.atsScoreAfter} → {result.atsScoreAfter}
+                    <span style={{ fontSize: 10, marginLeft: 6, color: result.atsScoreAfter >= prevResult.atsScoreAfter ? 'var(--green)' : 'var(--red)' }}>
+                      ({result.atsScoreAfter >= prevResult.atsScoreAfter ? '+' : ''}{result.atsScoreAfter - prevResult.atsScoreAfter} pts)
+                    </span>
+                  </p>
+                </div>
+                <div>
+                  <p className="font-mono text-xs mb-2" style={{ color: 'var(--text-muted)' }}>what changed this round</p>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                    {result.improvements.slice(0, 3).map((imp, i) => (
+                      <li key={i} className="flex items-start gap-2 text-xs mb-1.5"
+                        style={{ color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                        <span style={{ color: 'var(--green)', flexShrink: 0 }}>✓</span>
+                        {imp.split('→')[0]?.trim() || imp}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
+          {/* Section toggle */}
+          <div className="flex gap-1 mb-6" style={{ background: 'var(--surface)', padding: 4, borderRadius: 8, border: '1px solid var(--border)', width: 'fit-content' }}>
+            {([
+              { id: 'analysis', label: 'analysis', icon: <TrendingUp size={11} /> },
+              { id: 'prep', label: 'interview prep', icon: <BookOpen size={11} /> },
+            ] as const).map(s => (
+              <button key={s.id} onClick={() => setActiveSection(s.id)}
+                className="flex items-center gap-1.5 font-mono text-xs transition-all"
+                style={{ padding: '8px 14px', borderRadius: 6, border: 'none', cursor: 'pointer', background: activeSection === s.id ? 'var(--surface-2)' : 'transparent', color: activeSection === s.id ? 'var(--text-primary)' : 'var(--text-muted)' }}>
+                {s.icon}{s.label}
+              </button>
+            ))}
+          </div>
+
+          {activeSection === 'analysis' && (
+            <>
+              <div style={{ padding: 24, borderRadius: 12, background: 'var(--surface)', border: '1px solid var(--border)', marginBottom: 16 }}>
+                <p className="font-mono text-xs mb-6" style={{ color: 'var(--text-muted)' }}>ats score comparison</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginBottom: 24 }}>
+                  <ScoreRing score={result.atsScoreBefore} label="before" />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+                      <span className="font-mono" style={{ fontSize: 10, color: result.atsScoreAfter > result.atsScoreBefore ? 'var(--green)' : 'var(--text-muted)' }}>
+                        +{result.atsScoreAfter - result.atsScoreBefore} pts
+                      </span>
+                      <ArrowRight size={12} style={{ color: 'var(--text-muted)' }} />
+                      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+                    </div>
+                  </div>
+                  <ScoreRing score={result.atsScoreAfter} label="after" />
+                </div>
+                {result.scoreBreakdown && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    <ScoreBar label="keyword match" before={result.scoreBreakdown.before.keywordMatch} after={result.scoreBreakdown.after.keywordMatch} />
+                    <ScoreBar label="experience fit" before={result.scoreBreakdown.before.experienceRelevance} after={result.scoreBreakdown.after.experienceRelevance} />
+                    <ScoreBar label="skills alignment" before={result.scoreBreakdown.before.skillsAlignment} after={result.scoreBreakdown.after.skillsAlignment} />
+                    <ScoreBar label="formatting" before={result.scoreBreakdown.before.formatting} after={result.scoreBreakdown.after.formatting} />
+                  </div>
+                )}
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                <div style={{ padding: 24, borderRadius: 12, background: 'var(--surface)', border: '1px solid var(--border)' }}>
+                  <p className="font-mono text-xs mb-4" style={{ color: 'var(--text-muted)' }}>
+                    <TrendingUp size={10} style={{ display: 'inline', marginRight: 4 }} />what changed
+                  </p>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                    {result.improvements.map((imp, i) => (
+                      <li key={i} className="flex items-start gap-2 text-xs mb-2.5" style={{ color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                        <span style={{ color: 'var(--green)', marginTop: 1, flexShrink: 0 }}>✓</span>{imp}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                {result.weakBullets?.length > 0 && (
+                  <div style={{ padding: 24, borderRadius: 12, background: 'rgba(248,113,113,0.04)', border: '1px solid rgba(248,113,113,0.2)' }}>
+                    <p className="font-mono text-xs mb-1" style={{ color: 'var(--red)' }}>
+                      <AlertTriangle size={10} style={{ display: 'inline', marginRight: 4 }} />still needs work
+                    </p>
+                    <p className="text-xs mb-3" style={{ color: 'var(--text-muted)', lineHeight: 1.5 }}>Add real metrics or outcomes to strengthen these.</p>
+                    <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                      {result.weakBullets.map((b, i) => (
+                        <li key={i} className="flex items-start gap-2 text-xs mb-2" style={{ color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                          <span style={{ color: 'var(--red)', flexShrink: 0, marginTop: 1 }}>✗</span>{b}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+
+              {result.missingKeywords.length > 0 && (
+                <div style={{ padding: '16px 20px', borderRadius: 10, marginBottom: 16, background: 'var(--accent-dim)', border: '1px solid rgba(212,168,83,0.2)' }}>
+                  <p className="font-mono text-xs mb-3" style={{ color: 'var(--accent)' }}>missing keywords</p>
+                  <div className="flex flex-wrap gap-2">
+                    {result.missingKeywords.map(kw => (
+                      <span key={kw} className="font-mono text-xs px-2.5 py-1 rounded-full"
+                        style={{ background: 'rgba(212,168,83,0.12)', color: 'var(--accent)', border: '1px solid rgba(212,168,83,0.25)' }}>
+                        {kw}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+
+          {activeSection === 'prep' && result.interviewPrep && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 16 }}>
+              {result.interviewPrep.skillGaps?.length > 0 && (
+                <div style={{ padding: 24, borderRadius: 12, background: 'rgba(248,113,113,0.04)', border: '1px solid rgba(248,113,113,0.2)' }}>
+                  <p className="font-mono text-xs mb-4" style={{ color: 'var(--red)' }}>
+                    <Target size={10} style={{ display: 'inline', marginRight: 4 }} />skill gaps
+                  </p>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                    {result.interviewPrep.skillGaps.map((gap, i) => (
+                      <li key={i} className="flex items-start gap-2 text-xs mb-2.5" style={{ color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                        <span style={{ color: 'var(--red)', flexShrink: 0, marginTop: 1 }}>✗</span>{gap}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {result.interviewPrep.topicsToStudy?.length > 0 && (
+                <div style={{ padding: 24, borderRadius: 12, background: 'var(--surface)', border: '1px solid var(--border)' }}>
+                  <p className="font-mono text-xs mb-4" style={{ color: 'var(--text-muted)' }}>
+                    <BookOpen size={10} style={{ display: 'inline', marginRight: 4 }} />topics to study
+                  </p>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                    {result.interviewPrep.topicsToStudy.map((topic, i) => (
+                      <li key={i} className="flex items-start gap-2 text-xs mb-2.5" style={{ color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                        <span style={{ color: 'var(--accent)', flexShrink: 0, marginTop: 1 }}>→</span>{topic}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {result.interviewPrep.likelyQuestions?.length > 0 && (
+                <div style={{ padding: 24, borderRadius: 12, background: 'var(--surface)', border: '1px solid var(--border)' }}>
+                  <p className="font-mono text-xs mb-4" style={{ color: 'var(--text-muted)' }}>
+                    <MessageSquare size={10} style={{ display: 'inline', marginRight: 4 }} />likely interview questions
+                  </p>
+                  <ol style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                    {result.interviewPrep.likelyQuestions.map((q, i) => (
+                      <li key={i} className="flex items-start gap-3 text-xs mb-3" style={{ color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                        <span className="font-mono" style={{ color: 'var(--text-muted)', flexShrink: 0, marginTop: 1 }}>{String(i + 1).padStart(2, '0')}</span>{q}
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Output tabs */}
+          <div className="flex gap-1 mb-4" style={{ background: 'var(--surface)', padding: 4, borderRadius: 8, border: '1px solid var(--border)', width: 'fit-content' }}>
+            {(['resume', 'cover'] as const).map(tab => (
+              <button key={tab} onClick={() => setActiveTab(tab)} className="font-mono text-xs transition-all"
+                style={{ padding: '8px 16px', borderRadius: 6, border: 'none', cursor: 'pointer', background: activeTab === tab ? 'var(--surface-2)' : 'transparent', color: activeTab === tab ? 'var(--text-primary)' : 'var(--text-muted)' }}>
+                {tab === 'resume' ? 'optimized resume' : 'cover letter'}
+              </button>
+            ))}
+          </div>
+
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden', marginBottom: 40 }}>
+            <div className="flex items-center justify-between px-5 py-3" style={{ borderBottom: '1px solid var(--border)', background: 'var(--surface-2)' }}>
+              <span className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>
+                {activeTab === 'resume' ? (pdfIsStructured ? 'resume.pdf' : 'resume.txt') : 'cover_letter.docx'}
+              </span>
+              <div className="flex items-center gap-2">
+                <CopyButton text={activeTab === 'resume' ? result.optimizedResume : result.coverLetter} />
+                <button onClick={handleDownload} disabled={downloading}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs transition-all"
+                  style={{ background: 'var(--accent-dim)', color: 'var(--accent)', border: '1px solid rgba(212,168,83,0.3)', cursor: downloading ? 'wait' : 'pointer', opacity: downloading ? 0.7 : 1 }}>
+                  {downloading ? '...' : `↓ ${activeTab === 'resume' ? (pdfIsStructured ? 'Download PDF' : 'Copy Text') : 'Download DOCX'}`}
+                </button>
+              </div>
+            </div>
+            <pre style={{ padding: 24, margin: 0, fontFamily: 'DM Sans, sans-serif', fontSize: 13.5, lineHeight: 1.75, color: 'var(--text-secondary)', whiteSpace: 'pre-wrap', wordBreak: 'break-word', maxHeight: 520, overflowY: 'auto', fontWeight: 300 }}>
+              {activeTab === 'resume' ? result.optimizedResume : result.coverLetter}
+            </pre>
+          </div>
+        </section>
+      )}
+
+      {/* Regenerate */}
+      {result && (
+        <section style={{ padding: '0 24px 100px', maxWidth: 760, margin: '0 auto' }}>
+          <div style={{ padding: 24, borderRadius: 12, background: 'var(--surface)', border: '1px solid var(--border)' }}>
+            <p className="font-mono text-xs mb-4" style={{ color: 'var(--text-muted)' }}>↺ regenerate with different focus</p>
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
+              {REGEN_OPTIONS.map(opt => (
+                <button key={opt.value}
+                  onClick={() => {
+                    setRegenModifier(opt.value);
+                    setShowRegenCustom(opt.value === 'custom');
+                  }}
+                  className="font-mono text-xs transition-all"
+                  style={{
+                    padding: '8px 14px', borderRadius: 6, cursor: 'pointer',
+                    border: regenModifier === opt.value ? '1px solid var(--accent)' : '1px solid var(--border)',
+                    background: regenModifier === opt.value ? 'var(--accent-dim)' : 'transparent',
+                    color: regenModifier === opt.value ? 'var(--accent)' : 'var(--text-muted)',
+                  }}>
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+
+            {showRegenCustom && (
+              <textarea
+                rows={3}
+                placeholder="Describe exactly how you want the resume rewritten... e.g. 'Focus on AI and machine learning keywords, make it sound like a research engineer'"
+                value={regenCustom}
+                onChange={e => setRegenCustom(e.target.value)}
+                style={{ marginBottom: 16 }}
+              />
+            )}
+
+            <button
+              onClick={handleRegenerate}
+              disabled={regenLoading || !regenModifier}
+              className="w-full flex items-center justify-center gap-3 font-mono text-sm transition-all"
+              style={{
+                padding: '14px 24px', borderRadius: 10, minHeight: 52,
+                background: regenLoading ? 'var(--surface-2)' : 'var(--surface-2)',
+                color: !regenModifier ? 'var(--text-muted)' : 'var(--text-primary)',
+                border: regenLoading ? '1px solid var(--accent)' : '1px solid var(--border)',
+                cursor: regenLoading || !regenModifier ? 'not-allowed' : 'pointer',
+                fontWeight: 500,
+                transition: 'all 0.3s',
+              }}>
+              {regenLoading ? <LoadingProgress /> : <>↺ Regenerate with this focus</>}
+            </button>
+            <p className="text-center font-mono text-xs mt-3" style={{ color: 'var(--text-muted)' }}>
+              {isAdminUser
+                ? 'Unlimited regenerations'
+                : regenCount >= MAX_REGENS
+                ? '✗ Regeneration used — generate a new optimization to reset'
+                : `${MAX_REGENS - regenCount} regeneration remaining`}
+            </p>
+          </div>
+        </section>
+      )}
+
+      <footer style={{ borderTop: '1px solid var(--border)', padding: '24px', textAlign: 'center' }}>
+        <p className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>resumeai — built for job seekers</p>
+      </footer>
+    </div>
+  );
+}
+</file>
+
+</files>

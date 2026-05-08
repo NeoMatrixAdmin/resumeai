@@ -2,12 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { optimizeResume } from '@/lib/gemini';
 import { getUsageCount, incrementUsage, FREE_LIMIT } from '@/lib/redis';
-import { saveOptimization, supabaseAdmin } from '@/lib/supabase-server';
+import { saveOptimization, supabaseAdmin, getUserPlan } from '@/lib/supabase-server';
 
 export async function POST(req: NextRequest) {
   try {
     const { userId } = await auth();
-    console.log('Clerk userId:', userId);
     const { resumeText, jobDescription, fingerprint, modifier } = await req.json();
 
     if (!resumeText?.trim() || !jobDescription?.trim()) {
@@ -21,27 +20,24 @@ export async function POST(req: NextRequest) {
     const identifier = userId || fingerprint;
 
     if (!identifier) {
-      return NextResponse.json(
-        { error: 'Missing session identifier.' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing session identifier.' }, { status: 400 });
+    }
+
+    const plan = userId ? await getUserPlan(userId) : 'free';
+    const isPro = plan === 'pro';
+
+    if (!isAdmin && !isPro) {
+      const usageCount = await getUsageCount(identifier);
+      if (usageCount >= FREE_LIMIT) {
+        return NextResponse.json({ error: 'FREE_LIMIT_REACHED', usageCount }, { status: 429 });
+      }
     }
 
     const usageCount = await getUsageCount(identifier);
-
-    if (!isAdmin && usageCount >= FREE_LIMIT) {
-      return NextResponse.json(
-        { error: 'FREE_LIMIT_REACHED', usageCount },
-        { status: 429 }
-      );
-    }
-
     const result = await optimizeResume(resumeText, jobDescription, modifier);
-    const newCount = isAdmin ? usageCount : await incrementUsage(identifier);
+    const newCount = (isAdmin || isPro) ? usageCount : await incrementUsage(identifier);
 
     if (userId) {
-      console.log('Attempting to save for userId:', userId);
-
       await supabaseAdmin
         .from('users')
         .upsert({ id: userId, email: '' }, { onConflict: 'id' });
@@ -58,7 +54,7 @@ export async function POST(req: NextRequest) {
         jobDescription.match(/^([A-Z][a-zA-Z]+(?:\s[A-Z][a-zA-Z]+)?)\s+is\s+(?:an?|the)/m) ||
         jobDescription.match(/(?:join|at)\s+([A-Z][a-zA-Z]+(?:[\s.][a-zA-Z]+)?)\b/);
 
-      const saveResult = await saveOptimization({
+      await saveOptimization({
         user_id: userId,
         job_title: jobTitleMatch?.[1]?.trim().slice(0, 100) || 'Unknown Role',
         company_name: companyMatch?.[1]?.trim().slice(0, 100) || 'Unknown Company',
@@ -74,16 +70,13 @@ export async function POST(req: NextRequest) {
         score_breakdown: result.scoreBreakdown,
         interview_prep: result.interviewPrep,
       });
-
-      console.log('Save result:', saveResult);
-    } else {
-      console.log('No userId — not saving. userId was:', userId);
     }
 
     return NextResponse.json({
       ...result,
       usageCount: newCount,
-      usageRemaining: FREE_LIMIT - newCount,
+      usageRemaining: isPro || isAdmin ? 999 : FREE_LIMIT - newCount,
+      plan,
     });
 
   } catch (err: unknown) {

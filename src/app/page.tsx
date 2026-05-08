@@ -4,6 +4,7 @@ import { useDropzone } from 'react-dropzone';
 import { Upload, FileText, Briefcase, Copy, Check, AlertCircle, ArrowRight, Sparkles, TrendingUp, AlertTriangle, BookOpen, MessageSquare, Target } from 'lucide-react';
 import Link from 'next/link';
 import { UserButton, useUser, SignInButton } from '@clerk/nextjs';
+import { getPricingForCountry, PricingInfo } from '@/lib/ppp';
 
 function getFingerprint(): string {
   const key = 'rz_fp';
@@ -255,6 +256,10 @@ export default function Home() {
   const isDev = process.env.NODE_ENV === 'development';
   const isAdminUser = user?.id === process.env.NEXT_PUBLIC_ADMIN_USER_ID;
   const usageRemaining = isDev || isAdminUser ? FREE_LIMIT : FREE_LIMIT - usageCount;
+  const [plan, setPlan] = useState<'free' | 'pro'>('free');
+  const [pricing, setPricing] = useState<PricingInfo | null>(null); // Start as null to avoid flash of wrong price
+  const [countryCode, setCountryCode] = useState('IN'); // Add this to track country for the API
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   useEffect(() => {
     const reopened = localStorage.getItem('rz_reopen');
@@ -278,6 +283,30 @@ export default function Home() {
       .then(r => r.json())
       .then(d => setUsageCount(d.count ?? 0))
       .catch(() => {});
+  }, [isLoaded, user]);
+
+  useEffect(() => {
+  if (!isLoaded) return;
+
+  // 1. Get usage count
+  const fp = getFingerprint();
+  const usageKey = user?.id || fp;
+  fetch('/api/usage?fp=' + usageKey)
+    .then(r => r.json())
+    .then(d => setUsageCount(d.count ?? 0))
+    .catch(() => {});
+
+  // 2. DETECT COUNTRY & PRICING
+  fetch('/api/detect-country')
+    .then(res => res.json())
+    .then(data => {
+      setCountryCode(data.country);
+      setPricing(data.pricing); // This now contains the Tier 1, 2, or 3 info
+    })
+    .catch(() => {
+      // Fallback if detection fails
+      setPricing(getPricingForCountry('US'));
+    });
   }, [isLoaded, user]);
 
   const onDrop = useCallback(async (files: File[]) => {
@@ -386,6 +415,7 @@ export default function Home() {
     try {
       const data = await callOptimize();
       setResult(data);
+      if (data.plan) setPlan(data.plan);
       setRegenCount(0);
       setUsageCount(data.usageCount);
       setRegenModifier('');
@@ -410,8 +440,8 @@ export default function Home() {
     if (!modifier) { setError('Please select a regeneration option.'); return; }
 
     // Enforce regen limit for non-admin users
-    if (!isAdminUser && regenCount >= MAX_REGENS) {
-      setError('You have used your 1 free regeneration. Generate a new optimization to get another.');
+    if (!isAdminUser && plan !== 'pro' && regenCount >= MAX_REGENS) {
+      setError('You have used your free regeneration. Upgrade to Pro for unlimited regenerations.');
       return;
     }
 
@@ -421,7 +451,7 @@ export default function Home() {
     try {
       const data = await callOptimize(modifier);
       setResult(data);
-      if (!isAdminUser) setRegenCount(prev => prev + 1);
+      if (!isAdminUser && plan !== 'pro') setRegenCount(prev => prev + 1);
       setLastRegenModifier(regenModifier === 'custom' ? regenCustom.trim() : REGEN_OPTIONS.find(o => o.value === regenModifier)?.label ?? modifier);
       setPrevResult(result);
       setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
@@ -430,6 +460,64 @@ export default function Home() {
     } finally {
       setRegenLoading(false);
     }
+  };
+  const handleUpgrade = async () => {
+  if (!user) return;
+  setCheckoutLoading(true);
+  try {
+    const res = await fetch('/api/create-subscription', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ countryCode: pricing?.countryCode || 'US' }),
+    });
+    const data = await res.json();
+    if (data.error) { setError(data.error); return; }
+
+    const options = {
+      key: data.keyId,
+      subscription_id: data.subscriptionId,
+      name: 'ResumeAI',
+      description: `Pro Plan — ${pricing?.amountDisplay || '$9'}/mo`,
+      // IMPORTANT: Remove 'currency' and 'amount' from here. 
+      // For Subscriptions, Razorpay pulls these automatically from the Plan ID on the server.
+      handler: async function(response: any) {
+        try {
+          const verifyRes = await fetch('/api/verify-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_subscription_id: response.razorpay_subscription_id,
+              razorpay_signature: response.razorpay_signature,
+            }),
+          });
+          const verifyData = await verifyRes.json();
+          if (verifyData.success) {
+            setPlan('pro');
+            window.location.href = '/success';
+          }
+        } catch {
+          setError('Payment verification failed. Please contact support.');
+        }
+      },
+      prefill: { 
+        name: user.fullName || '', 
+        email: user.emailAddresses[0]?.emailAddress || '' 
+      },
+      theme: { color: '#d4a853' },
+      modal: { ondismiss: () => setCheckoutLoading(false) },
+    };
+
+    const rzp = new (window as any).Razorpay(options);
+    rzp.open();
+  } catch {
+    setError('Failed to open checkout. Please try again.');
+  } finally {
+    setCheckoutLoading(false);
+  }
+};
+  const handleManageBilling = async () => {
+    setError('To manage your subscription, please contact support@tryresumeai.vercel.app');
   };
   const handleLinkedinScrape = async () => {
     if (!linkedinUrl.trim()) return;
@@ -491,77 +579,66 @@ export default function Home() {
         backgroundImage: 'linear-gradient(rgba(10,10,10,0.92), rgba(10,10,10,0.92)), linear-gradient(90deg, transparent 0%, rgba(212,168,83,0.25) 50%, transparent 100%)',
         backgroundOrigin: 'border-box',
         backgroundClip: 'padding-box, border-box',
-        borderTop: 'none',
-        borderLeft: 'none',
-        borderRight: 'none',
+        borderTop: 'none', borderLeft: 'none', borderRight: 'none',
         padding: '0 32px', height: '64px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         position: 'sticky', top: 0,
         backdropFilter: 'blur(16px)', zIndex: 50,
       }}>
-        {/* Logo */}
         <span className="font-display" style={{ color: 'var(--accent)', letterSpacing: '-0.03em', fontSize: 24 }}>
           resumeai
         </span>
-        {/* Right side */}
         <div className="flex items-center gap-4">
           {isLoaded && !user ? (
             <>
-              <span className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>
-                Free to start
-              </span>
+              <span className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>Free to start</span>
               <SignInButton mode="modal">
                 <button className="font-mono text-xs" style={{
                   padding: '7px 16px', borderRadius: 6,
-                  border: '1px solid var(--accent)',
-                  background: 'var(--accent-dim)',
-                  color: 'var(--accent)',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}>
-                  sign in
-                </button>
+                  border: '1px solid var(--accent)', background: 'var(--accent-dim)',
+                  color: 'var(--accent)', cursor: 'pointer',
+                }}>sign in</button>
               </SignInButton>
             </>
           ) : isLoaded && user ? (
             <>
-              {/* Usage pill */}
               <div style={{
                 display: 'flex', alignItems: 'center', gap: 8,
                 padding: '5px 12px', borderRadius: 20,
-                background: 'var(--surface)',
-                border: '1px solid var(--border)',
+                background: 'var(--surface)', border: '1px solid var(--border)',
               }}>
                 <div style={{
                   width: 6, height: 6, borderRadius: '50%',
-                  background: usageRemaining > 0 ? 'var(--green)' : 'var(--red)',
-                  boxShadow: usageRemaining > 0 ? '0 0 6px rgba(74,222,128,0.6)' : '0 0 6px rgba(248,113,113,0.6)',
+                  background: plan === 'pro' ? 'var(--accent)' : usageRemaining > 0 ? 'var(--green)' : 'var(--red)',
+                  boxShadow: plan === 'pro' ? '0 0 6px rgba(212,168,83,0.6)' : usageRemaining > 0 ? '0 0 6px rgba(74,222,128,0.6)' : '0 0 6px rgba(248,113,113,0.6)',
                 }} />
                 <span className="font-mono" style={{ fontSize: 11, color: 'var(--text-secondary)' }}>
-                  {usageRemaining} free {usageRemaining === 1 ? 'optimization' : 'optimizations'}
+                  {plan === 'pro' ? 'unlimited' : `${usageRemaining} free ${usageRemaining === 1 ? 'optimization' : 'optimizations'}`}
                 </span>
               </div>
 
-              {/* Upgrade button */}
-              <button className="font-mono text-xs" style={{
-                padding: '6px 14px', borderRadius: 6,
-                border: '1px solid rgba(212,168,83,0.4)',
-                background: 'var(--accent-dim)',
-                color: 'var(--accent)',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-                letterSpacing: '0.02em',
-              }}
-                onClick={() => alert('Paid plans coming soon! 🚀')}
-              >
-                upgrade ✦
-              </button>
+              {plan === 'pro' ? (
+                <button onClick={handleManageBilling} className="font-mono text-xs" style={{
+                  padding: '6px 14px', borderRadius: 6,
+                  border: '1px solid rgba(74,222,128,0.4)',
+                  background: 'rgba(74,222,128,0.08)',
+                  color: 'var(--green)', cursor: 'pointer',
+                }}>pro ✦</button>
+              ) : (
+                <button onClick={handleUpgrade} disabled={checkoutLoading} className="font-mono text-xs" style={{
+                  padding: '6px 14px', borderRadius: 6,
+                  border: '1px solid rgba(212,168,83,0.4)',
+                  background: 'var(--accent-dim)', color: 'var(--accent)',
+                  cursor: checkoutLoading ? 'wait' : 'pointer',
+                }}>
+                  {checkoutLoading ? '...' : 'upgrade ✦'}
+                </button>
+              )}
 
               <Link href="/history" className="font-mono text-xs"
                 style={{ color: 'var(--text-muted)', textDecoration: 'none', padding: '6px 10px', borderRadius: 6, border: '1px solid transparent', transition: 'all 0.2s' }}
                 onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--border)')}
-                onMouseLeave={e => (e.currentTarget.style.borderColor = 'transparent')}
-              >
+                onMouseLeave={e => (e.currentTarget.style.borderColor = 'transparent')}>
                 history
               </Link>
               <UserButton />
@@ -613,7 +690,94 @@ export default function Home() {
           ))}
         </div>
       </section>
+      {/* Pricing */}
+      <section style={{ padding: '0 24px 80px', maxWidth: 760, margin: '0 auto' }}>
+        <div className="flex items-center gap-4 mb-10">
+          <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+          <span className="font-mono text-xs" style={{ color: 'var(--text-muted)', letterSpacing: '0.1em' }}>pricing</span>
+          <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+        </div>
 
+        {/* Dynamic PPP Badge - Shows for Tier 2 and Tier 3 countries */}
+        {pricing && pricing.tier !== 'TIER1' && (
+          <div className="flex justify-center mb-8">
+            <div 
+              className="px-4 py-2 rounded-full flex items-center gap-2"
+              style={{ background: 'var(--accent-dim)', border: '1px solid rgba(212,168,83,0.2)' }}
+            >
+              <Sparkles size={12} style={{ color: 'var(--accent)' }} />
+              <p className="font-mono text-[10px]" style={{ color: 'var(--accent)', letterSpacing: '0.05em' }}>
+                LOCALIZED PRICING ACTIVE FOR {pricing.countryName.toUpperCase()}
+              </p>
+            </div>
+          </div>
+        )}
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          {/* Free Tier */}
+          <div style={{ padding: 28, borderRadius: 12, background: 'var(--surface)', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div>
+              <p className="font-mono text-xs" style={{ color: 'var(--text-muted)', marginBottom: 8 }}>free</p>
+              <p className="font-display" style={{ fontSize: 36, color: 'var(--text-primary)', lineHeight: 1 }}>$0</p>
+              <p className="font-mono text-xs mt-1" style={{ color: 'var(--text-muted)' }}>forever</p>
+            </div>
+            <div style={{ height: 1, background: 'var(--border)' }} />
+            {['2 optimizations total', '1 regeneration per optimization', 'PDF + DOCX downloads', 'ATS scoring', 'Cover letter generation'].map(f => (
+              <div key={f} className="flex items-center gap-2">
+                <span style={{ color: 'var(--green)', fontSize: 12 }}>✓</span>
+                <span className="font-mono text-xs" style={{ color: 'var(--text-secondary)' }}>{f}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Pro Tier (Dynamic 3-Tier) */}
+          <div style={{ padding: 28, borderRadius: 12, background: 'var(--surface)', border: '1px solid var(--accent)', display: 'flex', flexDirection: 'column', gap: 12, position: 'relative' }}>
+            <div style={{ position: 'absolute', top: 12, right: 12, padding: '2px 10px', borderRadius: 20, background: 'var(--accent)', color: '#0a0a0a', fontSize: 10, fontFamily: 'DM Mono', fontWeight: 700 }}>
+              PRO
+            </div>
+            <div>
+              <p className="font-mono text-xs" style={{ color: 'var(--accent)', marginBottom: 8 }}>pro</p>
+              <div className="flex items-baseline gap-1">
+                <p className="font-display" style={{ fontSize: 36, color: 'var(--text-primary)', lineHeight: 1 }}>
+                  {pricing ? pricing.amountDisplay : '$9'}
+                </p>
+                <span className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>/mo</span>
+              </div>
+              <p className="font-mono text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>
+                Billed monthly in {pricing?.currency || 'USD'}
+              </p>
+            </div>
+            <div style={{ height: 1, background: 'rgba(212,168,83,0.2)' }} />
+            {[
+              'Unlimited optimizations', 
+              'Unlimited regenerations', 
+              'Priority AI (Gemini 2.5 Flash)', 
+              'Interview prep plan',
+              'Keyword gap analysis'
+            ].map(f => (
+              <div key={f} className="flex items-center gap-2">
+                <span style={{ color: 'var(--accent)', fontSize: 12 }}>✦</span>
+                <span className="font-mono text-xs" style={{ color: 'var(--text-secondary)' }}>{f}</span>
+              </div>
+            ))}
+            
+            <button
+              onClick={plan === 'pro' ? handleManageBilling : handleUpgrade}
+              disabled={checkoutLoading}
+              style={{
+                marginTop: 8, padding: '12px', borderRadius: 8,
+                background: plan === 'pro' ? 'var(--surface-2)' : 'var(--accent)',
+                color: plan === 'pro' ? 'var(--text-secondary)' : '#0a0a0a',
+                border: 'none', cursor: checkoutLoading ? 'wait' : 'pointer',
+                fontFamily: 'DM Mono', fontSize: 12, fontWeight: 500,
+                transition: 'all 0.2s'
+              }}
+            >
+              {plan === 'pro' ? 'Manage Subscription' : checkoutLoading ? 'Checking out...' : !user ? 'Sign in to upgrade' : `Upgrade Now`}
+            </button>
+          </div>
+        </div>
+      </section>
       {/* Inputs */}
       <section style={{ padding: '0 24px 80px', maxWidth: 760, margin: '0 auto' }}>
         <div style={{ marginBottom: 20 }}>
@@ -762,12 +926,22 @@ export default function Home() {
           </div>
         )}
 
-        <button onClick={handleGenerate} disabled={loading || (!user && isLoaded)}
+        <button onClick={handleGenerate}
+          disabled={loading || (!user && isLoaded) || (usageRemaining <= 0 && plan === 'free' && !isAdminUser)}
           className="w-full flex items-center justify-center gap-3 font-mono text-sm transition-all"
-          style={{ padding: '16px 24px', borderRadius: 10, minHeight: 56, background: loading ? 'var(--surface-2)' : !user && isLoaded ? 'var(--surface-2)' : usageRemaining <= 0 ? 'var(--surface)' : 'var(--accent)', color: !user && isLoaded ? 'var(--text-muted)' : usageRemaining <= 0 ? 'var(--text-muted)' : loading ? 'var(--text-secondary)' : '#0a0a0a', border: loading ? '1px solid var(--border)' : 'none', cursor: loading || usageRemaining <= 0 || (!user && isLoaded) ? 'not-allowed' : 'pointer', fontWeight: 500, letterSpacing: '0.02em' }}>
+          style={{
+            padding: '16px 24px', borderRadius: 10, minHeight: 56,
+            background: loading ? 'var(--surface-2)' : !user && isLoaded ? 'var(--surface-2)' : usageRemaining <= 0 && plan === 'free' && !isAdminUser ? 'var(--surface-2)' : 'var(--accent)',
+            color: !user && isLoaded ? 'var(--text-muted)' : usageRemaining <= 0 && plan === 'free' && !isAdminUser ? 'var(--text-muted)' : loading ? 'var(--text-secondary)' : '#0a0a0a',
+            border: loading ? '1px solid var(--border)' : 'none',
+            cursor: loading || usageRemaining <= 0 && plan === 'free' && !isAdminUser || (!user && isLoaded) ? 'not-allowed' : 'pointer',
+            fontWeight: 500, letterSpacing: '0.02em',
+          }}>
           {loading ? <LoadingProgress /> : !user && isLoaded ? (
             <><Sparkles size={16} />Sign in to Get Started<ArrowRight size={16} /></>
-          ) : usageRemaining <= 0 ? <>Upgrade for more optimizations</> : (
+          ) : usageRemaining <= 0 && plan === 'free' && !isAdminUser ? (
+            <><Sparkles size={16} />Upgrade to Continue<ArrowRight size={16} /></>
+          ) : (
             <><Sparkles size={16} />Generate Full Optimization<ArrowRight size={16} /></>
           )}
         </button>
@@ -1044,10 +1218,10 @@ export default function Home() {
               {regenLoading ? <LoadingProgress /> : <>↺ Regenerate with this focus</>}
             </button>
             <p className="text-center font-mono text-xs mt-3" style={{ color: 'var(--text-muted)' }}>
-              {isAdminUser
+              {isAdminUser || plan === 'pro'
                 ? 'Unlimited regenerations'
                 : regenCount >= MAX_REGENS
-                ? '✗ Regeneration used — generate a new optimization to reset'
+                ? <span>✗ Regeneration used — <button onClick={handleUpgrade} style={{ background: 'none', border: 'none', color: 'var(--accent)', cursor: 'pointer', fontFamily: 'DM Mono', fontSize: 11, padding: 0 }}>upgrade to Pro</button> for unlimited</span>
                 : `${MAX_REGENS - regenCount} regeneration remaining`}
             </p>
           </div>

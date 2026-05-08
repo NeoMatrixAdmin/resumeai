@@ -60,3 +60,13 @@ export async function deleteOptimization(id: string) {
     .eq('id', id);
   return !error;
 }
+
+export async function getUserPlan(userId: string): Promise<'free' | 'pro'> {
+  const { data, error } = await supabaseAdmin
+    .from('users')
+    .select('plan')
+    .eq('id', userId)
+    .single();
+  if (error || !data) return 'free';
+  return data.plan === 'pro' ? 'pro' : 'free';
+}
