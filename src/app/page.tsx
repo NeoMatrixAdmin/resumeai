@@ -425,7 +425,7 @@ export default function Home() {
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Something went wrong.';
       if (msg === 'FREE_LIMIT_REACHED') {
-        setError("You've used your 2 free optimizations. Paid plans coming soon!");
+        setError("You've used your 2 free optimizations. Please upgrade to use unlimited optimizations!");
       } else {
         setError(msg);
       }
@@ -1173,14 +1173,14 @@ export default function Home() {
 
         {/* Dynamic PPP Badge - Shows for Tier 2 and Tier 3 countries */}
         {pricing && pricing.tier !== 'TIER1' && (
-          <div className="flex justify-center mb-8">
+          <div className="flex justify-center mt-6 mb-16">
             <div 
-              className="px-4 py-2 rounded-full flex items-center gap-2"
+              className="px-8 py-2 rounded-full flex items-center gap-2"
               style={{ background: 'var(--accent-dim)', border: '1px solid rgba(212,168,83,0.2)' }}
             >
               <Sparkles size={0} style={{ color: 'var(--accent)' }} />
-              <p className="font-mono text-[10px] px-3" style={{ color: 'var(--accent)', letterSpacing: '0.05em' }}>
-                LOCALIZED PRICING ACTIVE FOR {pricing.countryName.toUpperCase()}
+              <p className="font-mono text-[10px]" style={{ color: 'var(--accent)', letterSpacing: '0.05em' }}>
+                Localized pricing active for {pricing.countryName.toUpperCase()}
               </p>
             </div>
           </div>
