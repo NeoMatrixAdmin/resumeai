@@ -692,7 +692,7 @@ export default function Home() {
 
       {/* How it works */}
       <section style={{ padding: '0 24px 80px', maxWidth: 760, margin: '0 auto' }}>
-        <div className="flex items-center gap-4 mb-16">
+        <div className="flex items-center gap-4 mb-32">
           <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
           <span className="font-mono text-xs" style={{ color: 'var(--text-muted)', letterSpacing: '0.1em' }}>how it works</span>
           <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
@@ -846,9 +846,9 @@ export default function Home() {
             fontWeight: 500, letterSpacing: '0.02em',
           }}>
           {loading ? <LoadingProgress /> : !user && isLoaded ? (
-            <><Sparkles size={16} />Sign in to Get Started<ArrowRight size={16} /></>
+            <><Sparkles size={0} />Sign in to Get Started<ArrowRight size={0} /></>
           ) : usageRemaining <= 0 && plan === 'free' && !isAdminUser ? (
-            <><Sparkles size={16} />Upgrade to Continue<ArrowRight size={16} /></>
+            <><Sparkles size={0} />Upgrade to Continue<ArrowRight size={0} /></>
           ) : (
             <><Sparkles size={0} />Generate Full Optimization<ArrowRight size={0} /></>
           )}
@@ -1165,7 +1165,7 @@ export default function Home() {
       )}
       {/* Pricing */}
       <section style={{ padding: '0 24px 80px', maxWidth: 760, margin: '0 auto' }}>
-        <div className="flex items-center gap-4 mb-16">
+        <div className="flex items-center gap-4 mb-32">
           <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
           <span className="font-mono text-xs" style={{ color: 'var(--text-muted)', letterSpacing: '0.1em' }}>Pricing (Sign in to view localizied prices)</span>
           <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
