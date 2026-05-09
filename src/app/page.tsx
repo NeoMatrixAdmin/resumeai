@@ -1224,6 +1224,7 @@ export default function Home() {
             {[
               'Unlimited optimizations', 
               'Unlimited regenerations', 
+              'Cancel or pause subscription at any time',
               'Priority AI (Gemini 2.5 Flash)', 
               'Interview prep plan',
               'Keyword gap analysis'
