@@ -1179,7 +1179,7 @@ export default function Home() {
               style={{ background: 'var(--accent-dim)', border: '1px solid rgba(212,168,83,0.2)' }}
             >
               <Sparkles size={0} style={{ color: 'var(--accent)' }} />
-              <p className="font-mono text-[10px]" style={{ color: 'var(--accent)', letterSpacing: '0.05em' }}>
+              <p className="font-mono text-[10px] px-3" style={{ color: 'var(--accent)', letterSpacing: '0.05em' }}>
                 LOCALIZED PRICING ACTIVE FOR {pricing.countryName.toUpperCase()}
               </p>
             </div>
