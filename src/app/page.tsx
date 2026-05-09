@@ -1173,15 +1173,15 @@ export default function Home() {
 
         {/* Dynamic PPP Badge - Shows for Tier 2 and Tier 3 countries */}
         {pricing && pricing.tier !== 'TIER1' && (
-          <div className="flex justify-center mt-6 mb-16">
+          <div className="w-full flex justify-center mt-8 mb-16">
             <div 
-              className="px-8 py-2 rounded-full flex items-center gap-2"
+              className="flex items-center justify-center gap-2 px-5 py-1.5 rounded-full"
               style={{ background: 'var(--accent-dim)', border: '1px solid rgba(212,168,83,0.2)' }}
             >
-              <Sparkles size={0} style={{ color: 'var(--accent)' }} />
-              <p className="font-mono text-[10px]" style={{ color: 'var(--accent)', letterSpacing: '0.05em' }}>
-                Localized pricing active for {pricing.countryName.toUpperCase()}
-              </p>
+              <Sparkles size={14} style={{ color: 'var(--accent)' }} />
+              <span className="font-mono text-xs uppercase whitespace-nowrap" style={{ color: 'var(--accent)', letterSpacing: '0.05em' }}>
+                Localized pricing active for {pricing.countryName}
+              </span>
             </div>
           </div>
         )}
