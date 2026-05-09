@@ -615,7 +615,7 @@ export default function Home() {
         <div className="flex items-center gap-4">
           {isLoaded && !user ? (
             <>
-              <span className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>Free to start</span>
+              <span className="font-mono text-xs" style={{ color: 'var(--text-muted)', marginRight: '24px' }}>Free to start</span>
               <SignInButton mode="modal">
                 <button className="font-mono text-xs" style={{
                   padding: '7px 16px', borderRadius: 6,
@@ -692,7 +692,7 @@ export default function Home() {
 
       {/* How it works */}
       <section style={{ padding: '0 24px 80px', maxWidth: 760, margin: '0 auto' }}>
-        <div className="flex items-center gap-4 mb-10">
+        <div className="flex items-center gap-4 mb-16">
           <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
           <span className="font-mono text-xs" style={{ color: 'var(--text-muted)', letterSpacing: '0.1em' }}>how it works</span>
           <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
@@ -1165,7 +1165,7 @@ export default function Home() {
       )}
       {/* Pricing */}
       <section style={{ padding: '0 24px 80px', maxWidth: 760, margin: '0 auto' }}>
-        <div className="flex items-center gap-4 mb-10">
+        <div className="flex items-center gap-4 mb-16">
           <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
           <span className="font-mono text-xs" style={{ color: 'var(--text-muted)', letterSpacing: '0.1em' }}>Pricing (Sign in to view localizied prices)</span>
           <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
