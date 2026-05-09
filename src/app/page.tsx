@@ -1173,7 +1173,7 @@ export default function Home() {
 
         {/* Dynamic PPP Badge - Shows for Tier 2 and Tier 3 countries */}
         {pricing && pricing.tier !== 'TIER1' && (
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '24px', marginBottom: '64px' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '24px', marginBottom: '24px' }}>
             <div 
               style={{ 
                 background: 'var(--accent-dim)', 
