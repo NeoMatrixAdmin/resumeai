@@ -1225,7 +1225,7 @@ export default function Home() {
               'Unlimited optimizations', 
               'Unlimited regenerations', 
               'Cancel or pause subscription at any time',
-              'Priority AI (Gemini 2.5 Flash)', 
+              'Priority AI', 
               'Interview prep plan',
               'Keyword gap analysis'
             ].map(f => (
