@@ -604,7 +604,7 @@ export default function Home() {
         backgroundOrigin: 'border-box',
         backgroundClip: 'padding-box, border-box',
         borderTop: 'none', borderLeft: 'none', borderRight: 'none',
-        padding: '0 32px', height: '64px',
+        padding: '0 16px', height: '64px', /* Reduced for mobile, still looks great on desktop */
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         position: 'sticky', top: 0,
         backdropFilter: 'blur(16px)', zIndex: 50,
@@ -612,7 +612,7 @@ export default function Home() {
         <span className="font-display" style={{ color: 'var(--accent)', letterSpacing: '-0.03em', fontSize: 24 }}>
           resumeai
         </span>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
           {isLoaded && !user ? (
             <>
               <span className="font-mono text-xs" style={{ color: 'var(--text-muted)', marginRight: '24px' }}>Free to start</span>
@@ -680,7 +680,7 @@ export default function Home() {
         <p style={{ fontSize: 16, lineHeight: 1.7, color: 'var(--text-secondary)', maxWidth: 520, fontWeight: 300 }}>
           Paste your resume and a job description. Our AI rewrites your bullets, scores your ATS match, and gives you an interview prep plan — in seconds.
         </p>
-        <div style={{ display: 'flex', gap: 48, marginTop: 32 }}>
+        <div className="flex flex-col sm:flex-row gap-6 sm:gap-12 mt-8">
           {[{ n: '3×', label: 'more interviews' }, { n: '<30s', label: 'to optimize' }, { n: 'Free', label: 'to start' }].map(s => (
             <div key={s.label} style={{ minWidth: 80 }}>
               <div className="font-mono" style={{ fontSize: 22, color: 'var(--text-primary)', fontWeight: 500 }}>{s.n}</div>
@@ -697,7 +697,7 @@ export default function Home() {
           <span className="font-mono text-xs" style={{ color: 'var(--text-muted)', letterSpacing: '0.1em' }}>how it works</span>
           <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             { n: '01', title: 'Upload your resume', desc: 'Paste your resume text or drop a PDF. We extract the content and preserve your structure.', icon: '↑' },
             { n: '02', title: 'Paste the job description', desc: 'Copy the full JD from any job board — LinkedIn, Naukri, Wellfound, company sites.', icon: '⎘' },
@@ -717,7 +717,7 @@ export default function Home() {
       {/* Inputs */}
       <section style={{ padding: '0 24px 80px', maxWidth: 760, margin: '0 auto' }}>
         <div style={{ marginBottom: 20 }}>
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
             <label className="flex items-center gap-2 text-sm font-mono" style={{ color: 'var(--text-secondary)' }}>
               <FileText size={14} style={{ color: 'var(--accent)' }} />  Your resume goes here
             </label>
@@ -884,7 +884,7 @@ export default function Home() {
               <p className="font-mono text-xs mb-3" style={{ color: 'var(--green)' }}>
                 ↺ Regenerated!
               </p>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
                   <p className="font-mono text-xs mb-2" style={{ color: 'var(--text-muted)' }}>score change</p>
                   <p className="font-mono text-sm" style={{ color: 'var(--green)' }}>
@@ -927,7 +927,7 @@ export default function Home() {
             <>
               <div style={{ padding: 24, borderRadius: 12, background: 'var(--surface)', border: '1px solid var(--border)', marginBottom: 16 }}>
                 <p className="font-mono text-xs mb-6" style={{ color: 'var(--text-muted)' }}>ats score comparison</p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginBottom: 24 }}>
+                <div className="flex items-center justify-between sm:justify-center gap-2 sm:gap-6 mb-6">
                   <ScoreRing score={result.atsScoreBefore} label="before" />
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
@@ -951,7 +951,7 @@ export default function Home() {
                 )}
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div style={{ padding: 24, borderRadius: 12, background: 'var(--surface)', border: '1px solid var(--border)' }}>
                   <p className="font-mono text-xs mb-4" style={{ color: 'var(--text-muted)' }}>
                     <TrendingUp size={10} style={{ display: 'inline', marginRight: 4 }} />what changed
@@ -1055,7 +1055,7 @@ export default function Home() {
           </div>
 
           <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden', marginBottom: 40 }}>
-            <div className="flex items-center justify-between px-5 py-3" style={{ borderBottom: '1px solid var(--border)', background: 'var(--surface-2)' }}>
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between px-5 py-3 gap-4 md:gap-0" style={{ borderBottom: '1px solid var(--border)', background: 'var(--surface-2)' }}>
               <span className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>
                 {activeTab === 'resume' ? (pdfIsStructured ? 'resume.pdf' : 'resume.txt') : 'cover_letter.docx'}
               </span>
@@ -1189,7 +1189,7 @@ export default function Home() {
           </div>
         )}
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Free Tier */}
           <div style={{ padding: 28, borderRadius: 12, background: 'var(--surface)', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: 12 }}>
             <div>
