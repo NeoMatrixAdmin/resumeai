@@ -153,4 +153,15 @@ textarea::placeholder {
   nav .flex.items-center.gap-4 {
     gap: 8px !important;
   }
+  /* 7. Nuke the 'Free to start' text on mobile nav to save space */
+  nav .flex.items-center.gap-4 > span {
+    display: none !important;
+  }
+
+  /* 8. Fix the Resume Upload button overlapping the text box */
+  div[style*="margin-bottom: 20px"] > div.flex {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
 }
