@@ -116,3 +116,34 @@ textarea::placeholder {
 }
 .pulse-dot:nth-child(2) { animation-delay: 0.2s; }
 .pulse-dot:nth-child(3) { animation-delay: 0.4s; }
+
+/* --- MOBILE RESPONSIVE OVERRIDES --- */
+@media (max-width: 768px) {
+  /* Fix the Hero Stats (3x, <30s, Free) */
+  section > div[style*="display: flex; gap: 48px"] {
+    flex-direction: column !important;
+    gap: 24px !important;
+  }
+
+  /* Fix the "How it works" Grid */
+  div[style*="grid-template-columns: repeat(3, 1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Fix the Results "What changed" Grid and Pricing Cards */
+  div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Fix the Download Buttons Bar */
+  .px-5.py-3 {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  /* Fix the Score Rings Gap */
+  div[style*="gap: 24px; margin-bottom: 24px"] {
+    gap: 12px !important;
+  }
+}
