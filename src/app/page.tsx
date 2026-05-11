@@ -1260,7 +1260,7 @@ export default function Home() {
     resumeai — built for job seekers
   </p>
   <p className="font-mono text-[10px]" style={{ color: 'var(--text-muted)', marginTop: '8px' }}>
-    achalambiger7@gmail.com | +91 9380874099
+    Contact us at resumeaihelpdesk@gmail.com
   </p>
 </footer>
     </div>
